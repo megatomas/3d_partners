@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { Product, Category, Tariff, Service, Lead, ContentBlock, SiteSettings, FAQItem, CalculatorDefaults } from './types';
-import { defaultProducts, defaultCategories, defaultTariffs, defaultServices, defaultLeads, defaultBlocks, defaultSettings, defaultFAQ, defaultCalculatorDefaults } from './data';
+import { Product, Category, Tariff, Service, Lead, ContentBlock, SiteSettings, FAQItem, CalculatorDefaults, Review, BlogPost } from './types';
+import { defaultProducts, defaultCategories, defaultTariffs, defaultServices, defaultLeads, defaultBlocks, defaultSettings, defaultFAQ, defaultCalculatorDefaults, defaultReviews, defaultBlogPosts } from './data';
 
 interface AppState {
   // Data
@@ -13,6 +13,8 @@ interface AppState {
   blocks: ContentBlock[];
   settings: SiteSettings;
   faq: FAQItem[];
+  reviews: Review[];
+  blogPosts: BlogPost[];
   calculatorDefaults: CalculatorDefaults;
   
   // Auth
@@ -74,6 +76,8 @@ export const useStore = create<AppState>()(
       blocks: defaultBlocks,
       settings: defaultSettings,
       faq: defaultFAQ,
+      reviews: defaultReviews,
+      blogPosts: defaultBlogPosts,
       calculatorDefaults: defaultCalculatorDefaults,
       isAdmin: false,
 
@@ -138,6 +142,10 @@ export const useStore = create<AppState>()(
 
       updateCalculatorDefaults: (data) => set((s) => ({ calculatorDefaults: { ...s.calculatorDefaults, ...data } })),
     }),
-    { name: 'production-platform-store' }
+    {
+      name: 'crocus-krd-store',
+      version: 2,
+      migrate: () => undefined as any, // при старой версии — начать с свежих демо-данных
+    }
   )
 );

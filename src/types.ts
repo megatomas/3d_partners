@@ -174,11 +174,36 @@ export interface SiteSettings {
   email?: string;
   telegram?: string;
   whatsapp?: string;
+  max?: string;
+  workHours?: string;
   address?: string;
+  mapsUrl?: string;
   headerText?: string;
   footerText?: string;
   socialLinks?: Record<string, string>;
   analyticsId?: string;
+}
+
+export interface Review {
+  id: string;
+  author: string;
+  text: string;
+  rating: number;
+  date?: string;
+  source?: string;
+  order: number;
+}
+
+export interface BlogPost {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  image?: string;
+  date: string;
+  category?: string;
+  order: number;
 }
 
 export interface FAQItem {

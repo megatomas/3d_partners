@@ -1,595 +1,427 @@
-import React, { useState } from 'react';
+// ==================== СТРАНИЦЫ: УСЛУГИ, О НАС, БЛОГ, ОТЗЫВЫ, ПАРТНЁРЫ, КОНТАКТЫ и др. ====================
 import { Link, useParams } from 'react-router-dom';
-import { Check, ArrowRight, Package, Truck, Zap, Shield, Camera, Wrench, Box, Calculator, Phone, Mail, MapPin, ChevronDown, ChevronUp, Send } from 'lucide-react';
+import {
+  ArrowRight, Check, ChevronRight, Clock, MapPin, Phone, Mail, Send,
+  Sprout, ShieldCheck, Truck, Sparkles, Leaf, Quote, PenTool, Users, Award,
+} from 'lucide-react';
 import { useStore } from '../store';
+import { Button, SectionTitle, Reveal, Stars, LeadForm, FaqAccordion, fmtPrice } from '../components/ui';
+import { PlantImg } from './CatalogPage';
 
-// ============ SERVICES PAGE ============
-export function ServicesPage() {
-  const { services } = useStore();
-  const published = services.filter(s => s.status === 'published').sort((a, b) => a.order - b.order);
-  const icons = [Wrench, Box, Truck, Camera, Zap];
+const PAGE_IMG = (id: string) => `https://images.unsplash.com/${id}?w=1400&q=80&auto=format&fit=crop`;
 
+// ---------- Общий герой для внутренних страниц ----------
+function PageHero({ title, subtitle, img, crumbs }: { title: string; subtitle?: string; img: string; crumbs?: [string, string][] }) {
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="text-center mb-12">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">Услуги производства и фулфилмента</h1>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">Полный цикл от производства до доставки товара покупателю. Выберите нужные услуги или комбинацию.</p>
+    <section className="relative bg-forest-950 text-white overflow-hidden">
+      <img src={img} alt="" className="absolute inset-0 w-full h-full object-cover opacity-30" />
+      <div className="absolute inset-0 bg-gradient-to-r from-forest-950/95 to-forest-900/50" />
+      <div className="relative max-w-7xl mx-auto px-4 py-16 md:py-24">
+        {crumbs && (
+          <nav className="flex items-center gap-2 text-xs text-forest-200 mb-4 flex-wrap">
+            <Link to="/" className="hover:text-gold-400">Главная</Link>
+            {crumbs.map(([label, to]) => (
+              <span key={label} className="flex items-center gap-2"><ChevronRight size={12} />
+                {to ? <Link to={to} className="hover:text-gold-400">{label}</Link> : <span className="text-white">{label}</span>}
+              </span>
+            ))}
+          </nav>
+        )}
+        <h1 className="font-display text-3xl md:text-5xl font-semibold leading-tight max-w-3xl">{title}</h1>
+        {subtitle && <p className="mt-4 max-w-2xl text-lg text-forest-100/80">{subtitle}</p>}
       </div>
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {published.map((service, i) => {
-          const Icon = icons[i] || Package;
-          return (
-            <div key={service.id} className="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-lg transition-shadow">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                <Icon size={24} className="text-blue-600" />
+    </section>
+  );
+}
+
+// ==================== УСЛУГИ ====================
+export function ServicesPage() {
+  const services = useStore((s) => s.services);
+  return (
+    <div>
+      <PageHero
+        title="Услуги садового центра «Крокус»"
+        subtitle="Полный цикл: от ландшафтного проекта до автополива и ухода за готовым садом. Одна команда — один договор — один ответственный исполнитель."
+        img={PAGE_IMG('photo-1416879595882-3373a0480b5b')}
+        crumbs={[['Услуги', '']]}
+      />
+      <section className="max-w-7xl mx-auto px-4 py-16 space-y-10">
+        {services.map((sv, i) => (
+          <Reveal key={sv.id} delay={i * 40}>
+            <Link to={`/services/${sv.slug}`}
+              className={`group grid lg:grid-cols-[1.4fr_1fr] gap-8 items-center rounded-3xl border border-forest-100 bg-white p-7 md:p-10 hover:border-forest-300 hover:shadow-xl transition-all duration-300 ${i % 2 ? 'lg:grid-cols-[1fr_1.4fr]' : ''}`}>
+              <div className={i % 2 ? 'lg:order-2' : ''}>
+                <div className="text-xs font-bold uppercase tracking-[0.2em] text-crocus-600 mb-2">Услуга №{i + 1}</div>
+                <h2 className="font-display text-2xl md:text-3xl font-semibold text-forest-900">{sv.name}</h2>
+                <p className="mt-3 text-forest-700/85 leading-relaxed">{sv.shortDescription}. {sv.fullDescription.slice(0, 180)}…</p>
+                <div className="mt-5 flex items-center gap-4 flex-wrap">
+                  <span className="rounded-full bg-forest-100 text-forest-700 text-sm font-bold px-4 py-2">{sv.price}</span>
+                  <span className="inline-flex items-center gap-1.5 text-crocus-600 font-bold text-sm group-hover:gap-3 transition-all">Подробнее <ArrowRight size={16} /></span>
+                </div>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">{service.name}</h3>
-              <p className="text-gray-600 text-sm mb-4">{service.shortDescription}</p>
-              <p className="text-lg font-semibold text-blue-600 mb-4">{service.price}</p>
-              <Link to="/contacts" className="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium text-sm">
-                Подробнее <ArrowRight size={14} className="ml-1" />
-              </Link>
-            </div>
-          );
-        })}
-      </div>
+              <div className={`rounded-2xl overflow-hidden aspect-[4/3] bg-forest-50 ${i % 2 ? 'lg:order-1' : ''}`}>
+                <PlantImg src={sv.image || PAGE_IMG(['photo-1585320806297-9794b3e4eeae','photo-1523712999610-f77fbcfc14da','photo-1416879595882-3373a0480b5b','photo-1463320726-f1f964a7ef3a','photo-1597848212624-a19d1b3e6f0b','photo-1523348837708-15d4a09cfac2'][i % 6])}
+                  alt={sv.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+              </div>
+            </Link>
+          </Reveal>
+        ))}
+      </section>
+      <section className="bg-forest-900 text-white py-16">
+        <div className="max-w-7xl mx-auto px-4 grid lg:grid-cols-2 gap-10 items-center">
+          <div>
+            <h2 className="font-display text-3xl font-semibold">Не знаете, с чего начать?</h2>
+            <p className="mt-3 text-forest-100/80 text-lg">Бесплатная консультация агронома: подскажем, что посадить на вашем участке, и честно оценим бюджет.</p>
+          </div>
+          <LeadForm dark source="Услуги" compact={false} />
+        </div>
+      </section>
     </div>
   );
 }
 
-// ============ SERVICE DETAIL PAGE ============
 export function ServicePage() {
   const { slug } = useParams();
-  const { services } = useStore();
-  const service = services.find(s => s.slug === slug);
-
-  if (!service) {
-    return (
-      <div className="max-w-7xl mx-auto px-4 py-16 text-center">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Услуга не найдена</h1>
-        <Link to="/services" className="text-blue-600">← Вернуться к услугам</Link>
-      </div>
-    );
-  }
-
+  const services = useStore((s) => s.services);
+  const sv = services.find((x) => x.slug === slug);
+  if (!sv) return <NotFoundSimple label="Услуга не найдена" />;
+  const idx = services.indexOf(sv);
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <Link to="/services" className="text-blue-600 hover:text-blue-700 text-sm mb-6 inline-block">← Все услуги</Link>
-      <h1 className="text-3xl font-bold text-gray-900 mb-4">{service.name}</h1>
-      <p className="text-xl text-gray-600 mb-6">{service.shortDescription}</p>
-      <div className="bg-gray-50 rounded-xl p-6 mb-8">
-        <p className="text-gray-700 leading-relaxed">{service.fullDescription}</p>
-        <p className="text-2xl font-bold text-blue-600 mt-4">{service.price}</p>
-      </div>
-      <Link to="/contacts" className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">
-        Заказать услугу <ArrowRight size={18} className="ml-2" />
-      </Link>
+    <div>
+      <PageHero title={sv.name} subtitle={sv.shortDescription} img={sv.image || PAGE_IMG(['photo-1585320806297-9794b3e4eeae','photo-1523712999610-f77fbcfc14da','photo-1416879595882-3373a0480b5b','photo-1463320726-f1f964a7ef3a','photo-1597848212624-a19d1b3e6f0b','photo-1523348837708-15d4a09cfac2'][idx % 6])}
+        crumbs={[['Услуги', '/services'], [sv.name, '']]} />
+      <section className="max-w-4xl mx-auto px-4 py-16">
+        <p className="text-lg text-forest-800/90 leading-relaxed">{sv.fullDescription}</p>
+        <div className="mt-8 inline-flex items-center gap-3 rounded-2xl bg-forest-50 border border-forest-200 px-6 py-4">
+          <span className="text-sm text-forest-600 font-semibold">Стоимость:</span>
+          <span className="font-display text-xl font-bold text-forest-900">{sv.price}</span>
+        </div>
+        <ul className="mt-10 space-y-3">
+          {['Бесплатный выезд замерщика и консультация', 'Фиксированная смета — без скрытых работ', 'Гарантия на растения и выполненные работы', 'Один договор и персональный менеджер проекта'].map((t) => (
+            <li key={t} className="flex gap-3 text-forest-800"><Check size={18} className="text-forest-500 shrink-0 mt-1" /> {t}</li>
+          ))}
+        </ul>
+        <div className="mt-12 rounded-3xl border border-forest-100 bg-white p-7 md:p-9">
+          <h3 className="font-display text-xl font-semibold text-forest-900 mb-1">Заказать услугу</h3>
+          <p className="text-sm text-forest-600 mb-6">Оставьте заявку — перезвоним, ответим на вопросы и назначим визит специалиста.</p>
+          <LeadForm source={`Услуга — ${sv.name}`} />
+        </div>
+        <div className="mt-8"><Button to="/catalog" variant="ghost">← Вернуться к услугам</Button></div>
+      </section>
     </div>
   );
 }
 
-// ============ PRICING PAGE ============
-export function PricingPage() {
-  const { tariffs } = useStore();
-  const published = tariffs.filter(t => t.status === 'published').sort((a, b) => a.order - b.order);
-
+// ==================== О КОМПАНИИ ====================
+export function AboutPage() {
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="text-center mb-12">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">Тарифы сотрудничества</h1>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">Выберите формат работы, который подходит вашим задачам. Все условия обсуждаемы.</p>
-      </div>
-      <div className="grid md:grid-cols-3 gap-6 mb-16">
-        {published.map(tariff => (
-          <div key={tariff.id} className={`bg-white rounded-xl p-6 relative ${tariff.isRecommended ? 'ring-2 ring-blue-600 shadow-xl scale-105' : 'shadow-sm border border-gray-200'}`}>
-            {tariff.isRecommended && (
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full">Рекомендуем</div>
-            )}
-            <h3 className="text-xl font-bold text-gray-900 mb-2">{tariff.name}</h3>
-            <p className="text-sm text-gray-600 mb-4">{tariff.shortDescription}</p>
-            {tariff.price !== undefined && tariff.price > 0 ? (
-              <div className="mb-6">
-                <span className="text-3xl font-bold text-gray-900">{tariff.price?.toLocaleString()} ₽</span>
-                {tariff.period && <span className="text-gray-500 ml-1">/ {tariff.period}</span>}
-              </div>
-            ) : (
-              <div className="mb-6">
-                <span className="text-2xl font-bold text-gray-900">Бесплатно</span>
-                {tariff.period && <p className="text-sm text-gray-500">{tariff.period}</p>}
-              </div>
-            )}
-            <ul className="space-y-2 mb-6">
-              {tariff.features.map((f, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm text-gray-700">
-                  <Check size={16} className="text-green-500 mt-0.5 flex-shrink-0" /> {f}
-                </li>
-              ))}
-            </ul>
-            {tariff.limitations?.map((l, i) => (
-              <p key={i} className="text-xs text-gray-400 mb-1">• {l}</p>
+    <div>
+      <PageHero title="Питомник, который выращивает не растения, а сады"
+        subtitle="Садовый центр «Крокус» — более 20 лет озеленяем Краснодар и край: собственные теплицы, поля рулонного газа и команда агрономов."
+        img={PAGE_IMG('photo-1463320726-f1f964a7ef3a')} crumbs={[['О питомнике', '']]} />
+      <section className="max-w-7xl mx-auto px-4 py-16 grid lg:grid-cols-2 gap-12 items-start">
+        <div className="space-y-5 text-forest-800/90 leading-relaxed">
+          <p className="text-lg">Название «Крокус» символизирует пробуждение природы и новую жизнь — именно это мы дарим каждому участку. Наш путь начинается в собственном питомнике, где каждое растение проходит полный цикл: от черенка до адаптированного к южному климату экземпляра.</p>
+          <p>Сегодня «Крокус» — это около 2000 видов деревьев, кустарников и цветов в наличии, топиарные мастерские, поля рулонного газа и ландшафтная студия. Мы одинаково хорошо делаем и одну гортензию для балкона, и парк вокруг резиденции.</p>
+          <p>Прямые импортные поставки из Италии, Нидерландов, Польши и Бельгии позволяют привозить редкие сорта под заказ на 20–30% выгоднее рынка — с фитосанитарным оформлением и карантином «под ключ».</p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 pt-6">
+            {[['~2000', 'видов растений'], ['99,9%', 'приживаемость'], ['20+', 'лет вGreen-бизнесе'], ['5.0 ★', 'рейтинг на Яндекс Картах']].map(([n, l]) => (
+              <div key={l}><div className="font-display text-3xl font-bold text-forest-700">{n}</div><div className="text-xs text-forest-500 mt-1">{l}</div></div>
             ))}
-            <Link to="/contacts" className={`block text-center py-2.5 rounded-lg font-medium mt-4 transition-colors ${tariff.isRecommended ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}>
-              {tariff.buttonText}
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <PlantImg src={PAGE_IMG('photo-1597848212624-a19d1b3e6f0b')} alt="Хвойные питомника" className="rounded-3xl col-span-2 aspect-[16/10] w-full object-cover" />
+          <PlantImg src={PAGE_IMG('photo-1523348837708-15d4a09cfac2')} alt="Топиарные формы" className="rounded-3xl aspect-square w-full object-cover" />
+          <PlantImg src={PAGE_IMG('photo-1416879595882-3373a0480b5b')} alt="Цветущий сад" className="rounded-3xl aspect-square w-full object-cover" />
+        </div>
+      </section>
+      <section className="bg-white py-16">
+        <div className="max-w-7xl mx-auto px-4">
+          <SectionTitle kicker="Ценности" title="Почему клиенты выбирают «Крокус»" />
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { icon: Sprout, t: 'Своё производство', d: 'Растения выращены у нас — значит, точно приживутся в климате Кубани' },
+              { icon: ShieldCheck, t: 'Честная гарантия', d: 'Заменяем растение, если оно не прижилось при соблюдении рекомендаций' },
+              { icon: Truck, t: 'Доставка и посадка', d: 'Свой транспорт и бригада: привезём в сохранности и правильно высадим' },
+              { icon: Sparkles, t: 'Эксклюзив', d: 'Топиари, крупномеры и коллекционные сорта, которых нет у конкурентов' },
+            ].map((v) => (
+              <div key={v.t} className="rounded-3xl bg-cream border border-forest-100 p-7 text-center">
+                <div className="w-12 h-12 mx-auto rounded-2xl bg-forest-100 text-forest-600 flex items-center justify-center mb-4"><v.icon size={22} /></div>
+                <h3 className="font-bold text-forest-900">{v.t}</h3>
+                <p className="text-sm text-forest-600 mt-2 leading-relaxed">{v.d}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+      <section className="max-w-7xl mx-auto px-4 py-16">
+        <SectionTitle kicker="Как это работает" title="Как рождается ваш сад" subtitle="Пять шагов от идеи до зелёного участка «под ключ»" />
+        <div className="grid md:grid-cols-5 gap-4">
+          {[
+            ['Заявка', 'Консультация агронома: солнце, ветер, грунт, бюджет'],
+            ['Проект', 'Дендроплан, визуализация и ведомость с ценами'],
+            ['Посадка', 'Бригада привозит и высаживает растения с грунтом'],
+            ['Газон и полив', 'Рулонный газон и автополив за один день'],
+            ['Сопровождение', 'Стрижка, подкормки и защита сада весь сезон'],
+          ].map(([t, d], i) => (
+            <Reveal key={t} delay={i * 70}>
+              <div className="relative h-full rounded-3xl bg-white border border-forest-100 p-6">
+                <div className="font-display text-4xl font-bold text-crocus-200">0{i + 1}</div>
+                <h3 className="font-bold text-forest-900 mt-2">{t}</h3>
+                <p className="text-xs text-forest-600 mt-2 leading-relaxed">{d}</p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+        <div className="text-center mt-12"><Button to="/contacts" size="lg">Обсудить мой проект</Button></div>
+      </section>
+    </div>
+  );
+}
+
+// ==================== БЛОГ ====================
+export function BlogPage() {
+  const posts = useStore((s) => s.blogPosts);
+  return (
+    <div>
+      <PageHero title="Блог агрономов «Крокуса»" subtitle="Практические советы по выбору, посадке и уходу за растениями в южном климате"
+        img={PAGE_IMG('photo-1523712999610-f77fbcfc14da')} crumbs={[['Блог', '']]} />
+      <section className="max-w-7xl mx-auto px-4 py-16 grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {posts.map((p, i) => (
+          <Reveal key={p.id} delay={i * 60}>
+            <Link to={`/blog/${p.slug}`} className="group block h-full bg-white rounded-3xl overflow-hidden border border-forest-100 hover:border-forest-300 hover:shadow-lg transition-all">
+              <PlantImg src={p.image} alt={p.title} className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+              <div className="p-6">
+                <div className="flex items-center gap-3 text-xs text-forest-500 mb-3">
+                  <span className="rounded-full bg-crocus-100? bg-[#f3e8fa] text-crocus-700 font-bold px-3 py-1">{p.category}</span>
+                  <span>{new Date(p.date).toLocaleDateString('ru-RU')}</span>
+                </div>
+                <h2 className="font-display text-lg font-semibold text-forest-900 leading-snug group-hover:text-crocus-700 transition">{p.title}</h2>
+                <p className="text-sm text-forest-600 mt-2 line-clamp-3">{p.excerpt}</p>
+                <span className="inline-flex items-center gap-1.5 text-crocus-600 font-bold text-sm mt-4 group-hover:gap-3 transition-all">Читать статью <ArrowRight size={15} /></span>
+              </div>
             </Link>
-          </div>
+          </Reveal>
         ))}
-      </div>
+      </section>
+    </div>
+  );
+}
 
-      {/* Comparison table */}
-      <div className="overflow-x-auto">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Сравнение тарифов</h2>
-        <table className="w-full text-sm bg-white rounded-xl overflow-hidden shadow-sm">
-          <thead>
-            <tr className="bg-gray-50">
-              <th className="text-left px-4 py-3 font-semibold text-gray-700">Возможность</th>
-              {published.map(t => <th key={t.id} className="px-4 py-3 font-semibold text-gray-700 text-center">{t.name}</th>)}
-            </tr>
-          </thead>
-          <tbody>
-            {['Доступ к каталогу', 'Материалы для карточек', 'Оптовые цены', 'Помощь с регистрацией', 'Создание карточек', 'Настройка поставок', 'Производство на заказ', 'Фулфилмент', 'Персональный менеджер'].map((feature, i) => (
-              <tr key={i} className={i % 2 === 0 ? 'bg-gray-50/50' : ''}>
-                <td className="px-4 py-3 text-gray-700">{feature}</td>
-                {published.map(t => (
-                  <td key={t.id} className="px-4 py-3 text-center">
-                    {t.features.some(f => f.toLowerCase().includes(feature.toLowerCase().split(' ')[0])) ? (
-                      <Check size={18} className="text-green-500 mx-auto" />
-                    ) : (
-                      <span className="text-gray-300">—</span>
-                    )}
-                  </td>
+export function BlogPostPage() {
+  const { slug } = useParams();
+  const posts = useStore((s) => s.blogPosts);
+  const post = posts.find((p) => p.slug === slug);
+  if (!post) return <NotFoundSimple label="Статья не найдена" />;
+  const others = posts.filter((p) => p.id !== post.id).slice(0, 3);
+  return (
+    <div>
+      <article className="max-w-3xl mx-auto px-4 py-12 md:py-16">
+        <nav className="flex items-center gap-2 text-xs text-forest-500 mb-8 flex-wrap">
+          <Link to="/" className="hover:text-crocus-600">Главная</Link><ChevronRight size={12} />
+          <Link to="/blog" className="hover:text-crocus-600">Блог</Link><ChevronRight size={12} />
+          <span className="text-forest-800 font-semibold line-clamp-1">{post.title}</span>
+        </nav>
+        <span className="rounded-full bg-[#f3e8fa] text-crocus-700 text-xs font-bold px-3 py-1">{post.category}</span>
+        <h1 className="font-display text-3xl md:text-4xl font-semibold text-forest-900 leading-tight mt-4">{post.title}</h1>
+        <p className="text-sm text-forest-500 mt-3">{new Date(post.date).toLocaleDateString('ru-RU')} · Садовый центр «Крокус»</p>
+        <PlantImg src={post.image} alt={post.title} className="w-full aspect-video object-cover rounded-3xl my-8" />
+        <p className="text-lg text-forest-800/90 leading-relaxed font-medium">{post.excerpt}</p>
+        <p className="mt-5 text-forest-700/90 leading-relaxed whitespace-pre-line">{post.content}</p>
+        <div className="mt-10 rounded-3xl bg-forest-50 border border-forest-200 p-7 flex flex-col sm:flex-row gap-5 items-center">
+          <PenTool size={28} className="text-crocus-600 shrink-0" />
+          <div className="flex-1">
+            <div className="font-bold text-forest-900">Остались вопросы по вашему участку?</div>
+            <div className="text-sm text-forest-600 mt-1">Агроном бесплатно подскажет решения именно для ваших условий.</div>
+          </div>
+          <Button to="/contacts">Задать вопрос</Button>
+        </div>
+      </article>
+      <section className="max-w-7xl mx-auto px-4 pb-16">
+        <h2 className="font-display text-2xl font-semibold text-forest-900 mb-6">Другие статьи</h2>
+        <div className="grid md:grid-cols-3 gap-6">
+          {others.map((p) => (
+            <Link key={p.id} to={`/blog/${p.slug}`} className="group bg-white rounded-3xl overflow-hidden border border-forest-100 hover:shadow-lg transition">
+              <PlantImg src={p.image} alt={p.title} className="aspect-[16/9] w-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              <div className="p-5 font-semibold text-forest-900 leading-snug group-hover:text-crocus-700 transition">{p.title}</div>
+            </Link>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+
+// ==================== ОТЗЫВЫ ====================
+export function ReviewsPage() {
+  const reviews = useStore((s) => s.reviews);
+  return (
+    <div>
+      <PageHero title="Отзывы наших клиентов" subtitle="Средняя оценка 5.0 на Яндекс Картах — мы гордимся каждым садом, который создали"
+        img={PAGE_IMG('photo-1585320806297-9794b3e4eeae')} crumbs={[['Отзывы', '']]} />
+      <section className="max-w-7xl mx-auto px-4 py-16">
+        <div className="flex items-center justify-center gap-6 mb-12">
+          <div className="text-center">
+            <div className="font-display text-6xl font-bold text-forest-900">5.0</div>
+            <Stars n={5} size={20} />
+          </div>
+          <div className="h-16 w-px bg-forest-200" />
+          <div className="text-sm text-forest-700 max-w-xs">
+            На основе отзывов гостей садового центра на <br /><b>Яндекс Картах</b>
+          </div>
+        </div>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {reviews.map((r, i) => (
+            <Reveal key={r.id} delay={(i % 3) * 60}>
+              <figure className="h-full bg-white rounded-3xl border border-forest-100 p-7 flex flex-col shadow-sm">
+                <Quote size={22} className="text-crocus-400 mb-4" />
+                <blockquote className="text-sm text-forest-800 leading-relaxed flex-1">«{r.text}»</blockquote>
+                <figcaption className="mt-5 pt-5 border-t border-forest-100 flex items-center justify-between">
+                  <div>
+                    <div className="font-bold text-forest-900 text-sm">{r.author}</div>
+                    <div className="text-xs text-forest-500">{r.source}</div>
+                  </div>
+                  <Stars n={r.rating} />
+                </figcaption>
+              </figure>
+            </Reveal>
+          ))}
+        </div>
+        <div className="text-center mt-12">
+          <Button href={useStore.getState().settings.mapsUrl} variant="outline" size="lg">Оставить отзыв на Яндекс Картах</Button>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+// ==================== ПАРТНЁРАМ / ПРОГРАММЫ ====================
+export function PartnersPage() {
+  const tariffs = useStore((s) => s.tariffs);
+  return (
+    <div>
+      <PageHero title="Программы сотрудничества" subtitle="Для частных владельцев, заказчиков комплексных проектов и коллег-ландшафтников"
+        img={PAGE_IMG('photo-1523348837708-15d4a09cfac2')} crumbs={[['Партнёрам', '']]} />
+      <section className="max-w-7xl mx-auto px-4 py-16 grid lg:grid-cols-3 gap-6 items-stretch">
+        {tariffs.map((t, i) => (
+          <Reveal key={t.id} delay={i * 80} className="h-full">
+            <div className={`relative h-full flex flex-col rounded-3xl p-8 border transition ${t.isRecommended ? 'bg-forest-900 text-white border-forest-700 shadow-2xl scale-[1.01]' : 'bg-white border-forest-100'}`}>
+              {t.isRecommended && <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gold-400 text-forest-950 text-[11px] font-extrabold px-4 py-1.5 uppercase">Выбор клиентов</span>}
+              <h2 className={`font-display text-2xl font-semibold ${t.isRecommended ? 'text-white' : 'text-forest-900'}`}>{t.name}</h2>
+              <p className={`text-sm mt-1 ${t.isRecommended ? 'text-forest-200' : 'text-forest-500'}`}>{t.shortDescription}</p>
+              <div className={`mt-4 text-sm font-bold ${t.isRecommended ? 'text-gold-400' : 'text-crocus-600'}`}>{t.period}</div>
+              <ul className="mt-6 space-y-3 flex-1">
+                {t.features.map((f) => (
+                  <li key={f} className={`flex gap-2.5 text-sm ${t.isRecommended ? 'text-forest-100/90' : 'text-forest-700'}`}>
+                    <Check size={16} className={`shrink-0 mt-0.5 ${t.isRecommended ? 'text-gold-400' : 'text-forest-500'}`} /> {f}
+                  </li>
                 ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-}
-
-// ============ HOW IT WORKS PAGE ============
-export function HowItWorksPage() {
-  return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="text-center mb-12">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">Как мы работаем</h1>
-        <p className="text-lg text-gray-600">Простой и понятный процесс от первого обращения до получения товара</p>
-      </div>
-      <div className="space-y-8">
-        {[
-          { step: 1, title: 'Оставляете заявку', text: 'Заполняете форму на сайте или пишете в мессенджер. Мы обсуждаем ваши задачи и подбираем оптимальный формат сотрудничества.', icon: Send },
-          { step: 2, title: 'Получаете каталог и условия', text: 'Отправляем актуальный каталог товаров с ценами, минимальными партиями и сроками производства. Обсуждаем индивидуальные условия.', icon: Package },
-          { step: 3, title: 'Выбираете товары', text: 'Определяете позиции для продажи. Получаете фотографии, описания и характеристики для создания карточек.', icon: Check },
-          { step: 4, title: 'Создаёте карточки', text: 'Размещаете товары на маркетплейсах. Мы помогаем с материалами или берём это на себя (по тарифу).', icon: Camera },
-          { step: 5, title: 'Заказываете производство', text: 'Согласовываем партию, сроки и условия оплаты. Запускаем производство.', icon: Wrench },
-          { step: 6, title: 'Получаете товар', text: 'Отгружаем готовую продукцию на склад маркетплейса или по вашему адресу. Доступен фулфилмент.', icon: Truck },
-        ].map(item => {
-          const Icon = item.icon;
-          return (
-            <div key={item.step} className="flex gap-6 items-start">
-              <div className="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center flex-shrink-0 font-bold text-lg">
-                {item.step}
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">{item.title}</h3>
-                <p className="text-gray-600">{item.text}</p>
+              </ul>
+              {t.limitations?.length ? <p className={`text-xs mt-4 ${t.isRecommended ? 'text-forest-300' : 'text-forest-400'}`}>{t.limitations.join('. ')}</p> : null}
+              <div className="mt-8">
+                <Button to="/contacts" variant={t.isRecommended ? 'gold' : 'outline'} className="w-full justify-center">{t.buttonText}</Button>
               </div>
             </div>
-          );
-        })}
-      </div>
-      <div className="text-center mt-12">
-        <Link to="/contacts" className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">
-          Начать сотрудничество <ArrowRight size={18} className="ml-2" />
-        </Link>
-      </div>
-    </div>
-  );
-}
-
-// ============ CALCULATOR PAGE ============
-export function CalculatorPage() {
-  const { calculatorDefaults } = useStore();
-  const [form, setForm] = useState({
-    purchasePrice: '', sellPrice: '', commission: String(calculatorDefaults.commissionPercent),
-    logistics: String(calculatorDefaults.logisticsCost), packaging: String(calculatorDefaults.packagingCost),
-    advertising: String(calculatorDefaults.advertisingCost), tax: String(calculatorDefaults.taxPercent),
-    other: '0', quantity: '30', quantity2: '100', quantity3: '300',
-  });
-
-  const pp = parseFloat(form.purchasePrice) || 0;
-  const sp = parseFloat(form.sellPrice) || 0;
-  const commP = parseFloat(form.commission) || 0;
-  const log = parseFloat(form.logistics) || 0;
-  const pack = parseFloat(form.packaging) || 0;
-  const adv = parseFloat(form.advertising) || 0;
-  const taxP = parseFloat(form.tax) || 0;
-  const other = parseFloat(form.other) || 0;
-
-  const commissionAmount = sp * commP / 100;
-  const taxAmount = sp * taxP / 100;
-  const totalExpenses = pp + commissionAmount + log + pack + adv + taxAmount + other;
-  const profit = sp - totalExpenses;
-  const margin = sp > 0 ? (profit / sp * 100) : 0;
-  const qty = parseInt(form.quantity) || 0;
-  const qty2 = parseInt(form.quantity2) || 0;
-  const qty3 = parseInt(form.quantity3) || 0;
-  const hasValues = pp > 0 && sp > 0;
-
-  return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="text-center mb-10">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">Калькулятор экономики товара</h1>
-        <p className="text-lg text-gray-600">Оцените предварительную прибыль от продажи товара на маркетплейсе</p>
-      </div>
-
-      <div className="bg-white rounded-2xl shadow-lg p-6 lg:p-8 mb-8">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Вводные данные</h2>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          </Reveal>
+        ))}
+      </section>
+      <section className="bg-white py-16">
+        <div className="max-w-7xl mx-auto px-4 grid md:grid-cols-3 gap-8 text-center">
           {[
-            { label: 'Закупочная цена, ₽', key: 'purchasePrice', placeholder: '320' },
-            { label: 'Цена продажи, ₽', key: 'sellPrice', placeholder: '890' },
-            { label: 'Комиссия площадки, %', key: 'commission', placeholder: '15' },
-            { label: 'Логистика, ₽', key: 'logistics', placeholder: '80' },
-            { label: 'Упаковка, ₽', key: 'packaging', placeholder: '30' },
-            { label: 'Реклама на продажу, ₽', key: 'advertising', placeholder: '50' },
-            { label: 'Налог, %', key: 'tax', placeholder: '6' },
-            { label: 'Прочие расходы, ₽', key: 'other', placeholder: '0' },
-          ].map(field => (
-            <div key={field.key}>
-              <label className="block text-sm font-medium text-gray-700 mb-1">{field.label}</label>
-              <input type="number" value={(form as any)[field.key]} onChange={e => setForm({...form, [field.key]: e.target.value})}
-                placeholder={field.placeholder} className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+            { icon: Users, t: 'Ландшафтным дизайнерам', d: 'Прайс партнёра, резерв редких позиций, отсрочка платежа постоянным клиентам' },
+            { icon: Award, t: 'Прорабам и стройфирмам', d: 'Озеленение объектов под ключ: от живых изгородей ЖК до парков у резиденций' },
+            { icon: Leaf, t: 'Владельцам участков', d: 'Персональный агроном, скидка 10% на первую покупку и бесплатная доставка от 30 000 ₽' },
+          ].map((x) => (
+            <div key={x.t}>
+              <div className="w-14 h-14 mx-auto rounded-2xl bg-forest-100 text-forest-600 flex items-center justify-center mb-4"><x.icon size={24} /></div>
+              <h3 className="font-display text-lg font-semibold text-forest-900">{x.t}</h3>
+              <p className="text-sm text-forest-600 mt-2 leading-relaxed">{x.d}</p>
             </div>
           ))}
         </div>
-
-        {hasValues ? (
-          <div>
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Результат расчёта</h2>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-              <div className="bg-red-50 rounded-xl p-4 text-center">
-                <p className="text-sm text-gray-500">Расходы на единицу</p>
-                <p className="text-2xl font-bold text-red-600">{Math.round(totalExpenses)} ₽</p>
-              </div>
-              <div className={`rounded-xl p-4 text-center ${profit >= 0 ? 'bg-green-50' : 'bg-red-50'}`}>
-                <p className="text-sm text-gray-500">Прибыль с единицы</p>
-                <p className={`text-2xl font-bold ${profit >= 0 ? 'text-green-600' : 'text-red-600'}`}>{Math.round(profit)} ₽</p>
-              </div>
-              <div className={`rounded-xl p-4 text-center ${margin >= 20 ? 'bg-green-50' : margin >= 0 ? 'bg-yellow-50' : 'bg-red-50'}`}>
-                <p className="text-sm text-gray-500">Маржинальность</p>
-                <p className={`text-2xl font-bold ${margin >= 20 ? 'text-green-600' : margin >= 0 ? 'text-yellow-600' : 'text-red-600'}`}>{margin.toFixed(1)}%</p>
-              </div>
-              <div className="bg-blue-50 rounded-xl p-4 text-center">
-                <p className="text-sm text-gray-500">Выручка с единицы</p>
-                <p className="text-2xl font-bold text-blue-600">{sp} ₽</p>
-              </div>
-            </div>
-
-            <h3 className="font-semibold text-gray-900 mb-3">Сценарии по объёму продаж</h3>
-            <div className="grid sm:grid-cols-3 gap-4">
-              {[
-                { label: `${qty} шт/мес`, qty: qty },
-                { label: `${qty2} шт/мес`, qty: qty2 },
-                { label: `${qty3} шт/мес`, qty: qty3 },
-              ].map((scenario, i) => (
-                <div key={i} className="bg-gray-50 rounded-lg p-4 text-center">
-                  <p className="text-sm text-gray-500">{scenario.label}</p>
-                  <p className={`text-xl font-bold ${profit * scenario.qty >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                    {Math.round(profit * scenario.qty).toLocaleString()} ₽
-                  </p>
-                  <p className="text-xs text-gray-400">прибыль в месяц</p>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-              <p className="text-sm text-yellow-800">
-                <strong>Важно:</strong> Данный расчёт является предварительным. Фактические расходы могут отличаться в зависимости от категории товара, региона, сезона и других факторов. Это не является гарантией дохода.
-              </p>
-            </div>
-          </div>
-        ) : (
-          <div className="bg-gray-50 rounded-xl p-8 text-center text-gray-500">
-            <Calculator size={48} className="mx-auto mb-4 text-gray-300" />
-            <p>Заполните закупочную цену и цену продажи для расчёта</p>
-          </div>
-        )}
-      </div>
+      </section>
     </div>
   );
 }
 
-// ============ FOR SELLERS PAGE ============
-export function ForSellersPage() {
-  return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="text-center mb-12">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">Для действующих продавцов</h1>
-        <p className="text-lg text-gray-600">Расширяйте ассортимент без вложений в собственное оборудование</p>
-      </div>
-      <div className="space-y-6">
-        {[
-          { title: 'Новые позиции для ассортимента', text: 'Добавляйте товары из нашего каталога без рисков и вложений в производство. Более 50 позиций с регулярным обновлением.' },
-          { title: 'Небольшие партии', text: 'Начинайте с минимальных партий от 10 штук. Тестируйте спрос и масштабируйтесь по мере роста продаж.' },
-          { title: 'Готовые материалы', text: 'Получайте фотографии, описания и характеристики для быстрого создания карточек на любой площадке.' },
-          { title: 'Стабильное производство', text: 'Собственное производство обеспечивает стабильные сроки и качество. Вы не зависите от сторонних поставщиков.' },
-          { title: 'Фулфилмент', text: 'Делегируйте хранение, упаковку и отгрузку нам. Сосредоточьтесь на развитии продаж и маркетинге.' },
-          { title: 'Производство по вашим моделям', text: 'Есть идея для нового товара? Мы изготовим его по вашей 3D-модели или техническому заданию.' },
-        ].map((item, i) => (
-          <div key={i} className="flex gap-4 p-5 bg-white rounded-xl border border-gray-100">
-            <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-              <Check size={20} className="text-blue-600" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-900 mb-1">{item.title}</h3>
-              <p className="text-gray-600 text-sm">{item.text}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-      <div className="text-center mt-10">
-        <Link to="/catalog" className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">
-          Смотреть каталог <ArrowRight size={18} className="ml-2" />
-        </Link>
-      </div>
-    </div>
-  );
-}
-
-// ============ FOR BEGINNERS PAGE ============
-export function ForBeginnersPage() {
-  return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="text-center mb-12">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">Для начинающих продавцов</h1>
-        <p className="text-lg text-gray-600">Запустите продажи на маркетплейсах без покупки оборудования и организации производства</p>
-      </div>
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 mb-10">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">Почему это работает для новичков?</h2>
-        <div className="grid sm:grid-cols-2 gap-4">
-          {[
-            'Не нужно покупать 3D-принтер или другое оборудование',
-            'Не нужно разбираться в производстве и материалах',
-            'Можно начать с небольшого бюджета',
-            'Получаете готовые материалы для карточек',
-            'Тестируете спрос небольшими партиями',
-            'Мы помогаем с запуском (по тарифу «Магазин под ключ»)',
-          ].map((item, i) => (
-            <div key={i} className="flex items-start gap-2">
-              <Check size={18} className="text-green-500 mt-0.5 flex-shrink-0" />
-              <span className="text-sm text-gray-700">{item}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-      <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">С чего начать?</h2>
-      <div className="space-y-4">
-        {[
-          { step: 1, title: 'Изучите каталог', text: 'Посмотрите доступные товары, их характеристики и цены. Обратите внимание на рекомендуемую розничную цену.' },
-          { step: 2, title: 'Рассчитайте экономику', text: 'Используйте калькулятор для оценки потенциальной прибыли. Учтите комиссию площадки, логистику и другие расходы.' },
-          { step: 3, title: 'Оставьте заявку', text: 'Заполните форму — мы расскажем об условиях, поможем выбрать товары и ответим на вопросы.' },
-          { step: 4, title: 'Начните продавать', text: 'Получите товары и материалы, создайте карточки и запустите продажи. Мы рядом на каждом этапе.' },
-        ].map(item => (
-          <div key={item.step} className="flex gap-4 items-start bg-white rounded-xl p-5 border border-gray-100">
-            <div className="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center flex-shrink-0 font-bold">{item.step}</div>
-            <div>
-              <h3 className="font-semibold text-gray-900">{item.title}</h3>
-              <p className="text-sm text-gray-600">{item.text}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-      <div className="text-center mt-10">
-        <Link to="/calculator" className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors mr-4">
-          Рассчитать прибыль
-        </Link>
-        <Link to="/contacts" className="inline-flex items-center px-6 py-3 border-2 border-blue-600 text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition-colors">
-          Оставить заявку
-        </Link>
-      </div>
-    </div>
-  );
-}
-
-// ============ CUSTOM PRODUCTION PAGE ============
-export function CustomProductionPage() {
-  return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="text-center mb-12">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">Производство по индивидуальным заказам</h1>
-        <p className="text-lg text-gray-600">Изготовление изделий по вашим моделям, чертежам и техническому заданию</p>
-      </div>
-      <div className="grid md:grid-cols-2 gap-8 mb-12">
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <Wrench size={32} className="text-blue-600 mb-4" />
-          <h3 className="text-xl font-bold text-gray-900 mb-3">3D-печать</h3>
-          <ul className="space-y-2 text-sm text-gray-600">
-            <li>• FDM-печать из PLA, ABS, PETG, TPU</li>
-            <li>• Точность до 0.1 мм</li>
-            <li>• Прототипы и мелкосерийное производство</li>
-            <li>• Помощь с подготовкой модели</li>
-          </ul>
-        </div>
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <Box size={32} className="text-blue-600 mb-4" />
-          <h3 className="text-xl font-bold text-gray-900 mb-3">Лазерная резка</h3>
-          <ul className="space-y-2 text-sm text-gray-600">
-            <li>• Фанера до 10 мм</li>
-            <li>• Акрил до 8 мм</li>
-            <li>• Картон, кожа, ткань</li>
-            <li>• Гравировка логотипов</li>
-          </ul>
-        </div>
-      </div>
-      <div className="bg-gray-50 rounded-xl p-6 mb-8">
-        <h3 className="font-semibold text-gray-900 mb-3">Как заказать?</h3>
-        <ol className="space-y-2 text-sm text-gray-600 list-decimal list-inside">
-          <li>Отправьте нам 3D-модель (STL, STEP), чертёж или техническое задание</li>
-          <li>Мы оценим стоимость и сроки производства</li>
-          <li>Согласуем материал, цвет и другие параметры</li>
-          <li>Изготовим образец для утверждения (при необходимости)</li>
-          <li>Запустим серийное производство</li>
-        </ol>
-      </div>
-      <div className="text-center">
-        <Link to="/contacts" className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">
-          Обсудить заказ <ArrowRight size={18} className="ml-2" />
-        </Link>
-      </div>
-    </div>
-  );
-}
-
-// ============ FAQ PAGE ============
+// ==================== FAQ ====================
 export function FAQPage() {
-  const { faq } = useStore();
-  const [openId, setOpenId] = useState<string | null>(null);
-  const sorted = [...faq].sort((a, b) => a.order - b.order);
-
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="text-center mb-10">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">Частые вопросы</h1>
-        <p className="text-lg text-gray-600">Ответы на популярные вопросы о сотрудничестве</p>
-      </div>
-      <div className="space-y-3">
-        {sorted.map(item => (
-          <div key={item.id} className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-            <button onClick={() => setOpenId(openId === item.id ? null : item.id)}
-              className="w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition-colors">
-              <span className="font-medium text-gray-900 pr-4">{item.question}</span>
-              {openId === item.id ? <ChevronUp size={20} className="text-gray-400 flex-shrink-0" /> : <ChevronDown size={20} className="text-gray-400 flex-shrink-0" />}
-            </button>
-            {openId === item.id && (
-              <div className="px-5 pb-5 text-gray-600 text-sm leading-relaxed border-t border-gray-100 pt-3">
-                {item.answer}
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-      <div className="text-center mt-10">
-        <p className="text-gray-600 mb-4">Не нашли ответ на свой вопрос?</p>
-        <Link to="/contacts" className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">
-          Связаться с нами
-        </Link>
-      </div>
+    <div>
+      <PageHero title="Вопросы и ответы" subtitle="Собрали всё, о чём чаще всего спрашивают наши агрономы"
+        img={PAGE_IMG('photo-1416879595882-3373a0480b5b')} crumbs={[['FAQ', '']]} />
+      <section className="max-w-7xl mx-auto px-4 py-16">
+        <FaqAccordion />
+        <div className="text-center mt-12">
+          <p className="text-forest-600 mb-4">Не нашли ответ? Спросите лично — отвечаем быстро.</p>
+          <Button to="/contacts" size="lg">Задать вопрос агроному</Button>
+        </div>
+      </section>
     </div>
   );
 }
 
-// ============ CONTACTS PAGE ============
+// ==================== КОНТАКТЫ ====================
 export function ContactsPage() {
-  const { settings, addLead } = useStore();
-  const [submitted, setSubmitted] = useState(false);
-  const [form, setForm] = useState({ name: '', phone: '', email: '', sellerType: 'beginner', services: [] as string[], preferredContact: 'phone', comment: '' });
-  const [consent, setConsent] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!form.name || !form.phone || !consent) return;
-    addLead({
-      id: `lead-${Date.now()}`, createdAt: new Date().toISOString(), name: form.name, phone: form.phone,
-      email: form.email || undefined, status: 'new' as const, sellerType: form.sellerType,
-      interestedServices: form.services, preferredContact: form.preferredContact, comment: form.comment, notes: [],
-    });
-    setSubmitted(true);
-  };
-
+  const st = useStore((s) => s.settings);
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="text-center mb-12">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">Контакты</h1>
-        <p className="text-lg text-gray-600">Свяжитесь с нами удобным способом</p>
-      </div>
-
-      <div className="grid lg:grid-cols-2 gap-10">
+    <div>
+      <PageHero title="Контакты" subtitle="Приезжайте гулять по питомнику и выбирать растения вживую — мы всегда рады гостям"
+        img={PAGE_IMG('photo-1463320726-f1f964a7ef3a')} crumbs={[['Контакты', '']]} />
+      <section className="max-w-7xl mx-auto px-4 py-16 grid lg:grid-cols-2 gap-10">
         <div>
-          <div className="space-y-6 mb-8">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center"><Phone size={20} className="text-blue-600" /></div>
-              <div><p className="text-sm text-gray-500">Телефон</p><a href={`tel:${settings.phone}`} className="text-lg font-semibold text-gray-900 hover:text-blue-600">{settings.phone}</a></div>
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center"><Mail size={20} className="text-blue-600" /></div>
-              <div><p className="text-sm text-gray-500">E-mail</p><a href={`mailto:${settings.email}`} className="text-lg font-semibold text-gray-900 hover:text-blue-600">{settings.email}</a></div>
-            </div>
-            {settings.telegram && (
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center"><span className="text-blue-600 text-xl">💬</span></div>
-                <div><p className="text-sm text-gray-500">Telegram</p><a href={`https://t.me/${settings.telegram.replace('@', '')}`} className="text-lg font-semibold text-gray-900 hover:text-blue-600">{settings.telegram}</a></div>
+          <div className="grid sm:grid-cols-2 gap-4">
+            {[
+              { icon: Phone, t: 'Телефон', v: st.phone, href: `tel:${st.phone?.replace(/[^\d+]/g, '')}` },
+              { icon: Mail, t: 'Почта', v: st.email, href: `mailto:${st.email}` },
+              { icon: MapPin, t: 'Адрес', v: st.address, href: st.mapsUrl },
+              { icon: Clock, t: 'Режим работы', v: st.workHours },
+            ].map((c) => (
+              <div key={c.t} className="rounded-3xl bg-white border border-forest-100 p-6">
+                <c.icon size={20} className="text-crocus-600 mb-3" />
+                <div className="text-xs uppercase tracking-wider text-forest-500 font-bold">{c.t}</div>
+                {c.href ? <a href={c.href} target="_blank" rel="noreferrer" className="font-bold text-forest-900 hover:text-crocus-600 transition">{c.v}</a>
+                     : <div className="font-bold text-forest-900">{c.v}</div>}
               </div>
-            )}
-            {settings.address && (
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center"><MapPin size={20} className="text-blue-600" /></div>
-                <div><p className="text-sm text-gray-500">Адрес</p><p className="text-lg font-semibold text-gray-900">{settings.address}</p></div>
-              </div>
-            )}
+            ))}
+          </div>
+          <div className="mt-6 rounded-3xl overflow-hidden border border-forest-100 shadow-sm">
+            <iframe
+              title="Карта — садовый центр Крокус"
+              src={`https://yandex.ru/map-widget/v1/?text=${encodeURIComponent('Садовый центр Крокус Краснодар Ростовское шоссе 30/1')}&z=15`}
+              className="w-full h-[380px] border-0" loading="lazy"
+            />
+          </div>
+          <p className="text-sm text-forest-500 mt-3 flex items-center gap-2">
+            <Send size={14} className="text-crocus-600" /> Ориентир: рядом «Метро» и Бауцентр, удобный подъезд и парковка.
+          </p>
+        </div>
+        <div className="rounded-3xl bg-forest-900 text-white p-8 md:p-10 self-start">
+          <h2 className="font-display text-2xl font-semibold">Оставить заявку</h2>
+          <p className="text-sm text-forest-100/70 mt-2 mb-6">Подберём растения, рассчитаем доставку и посадку. Перезвоним в течение 15 минут в рабочее время.</p>
+          <LeadForm dark source="Контакты" />
+          <div className="mt-8 pt-6 border-t border-forest-700 flex flex-wrap gap-4 text-sm">
+            <a className="font-bold text-gold-400 hover:underline" href={`tel:${st.phone?.replace(/[^\d+]/g, '')}`}>{st.phone}</a>
+            <span className="opacity-70">Telegram: {st.telegram}</span>
           </div>
         </div>
-
-        <div>
-          {submitted ? (
-            <div className="bg-green-50 rounded-2xl p-8 text-center">
-              <Check size={48} className="mx-auto text-green-600 mb-4" />
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Заявка отправлена!</h3>
-              <p className="text-gray-600">Мы свяжемся с вами в течение рабочего дня.</p>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-gray-200 p-6">
-              <h2 className="text-xl font-bold text-gray-900 mb-4">Оставить заявку</h2>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Имя *</label>
-                  <input type="text" required value={form.name} onChange={e => setForm({...form, name: e.target.value})} className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Ваше имя" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Телефон *</label>
-                  <input type="tel" required value={form.phone} onChange={e => setForm({...form, phone: e.target.value})} className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="+7 (___) ___-__-__" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">E-mail</label>
-                  <input type="email" value={form.email} onChange={e => setForm({...form, email: e.target.value})} className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="email@example.com" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Комментарий</label>
-                  <textarea value={form.comment} onChange={e => setForm({...form, comment: e.target.value})} rows={3} className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Расскажите о ваших задачах..." />
-                </div>
-                <label className="flex items-start gap-2 cursor-pointer">
-                  <input type="checkbox" checked={consent} onChange={e => setConsent(e.target.checked)} className="mt-1" />
-                  <span className="text-xs text-gray-500">Согласен на <Link to="/privacy-policy" className="text-blue-600 underline">обработку персональных данных</Link></span>
-                </label>
-                <button type="submit" disabled={!consent} className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 disabled:bg-gray-300 transition-colors">
-                  Отправить заявку
-                </button>
-              </div>
-            </form>
-          )}
-        </div>
-      </div>
+      </section>
     </div>
   );
 }
 
-// ============ LEGAL PAGES ============
+// ==================== ПОЛИТИКА ====================
 export function PrivacyPolicyPage() {
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-3xl font-bold text-gray-900 mb-6">Политика конфиденциальности</h1>
-      <div className="prose text-gray-600 space-y-4">
-        <p>Настоящая Политика конфиденциальности определяет порядок обработки и защиты персональных данных пользователей сайта.</p>
-        <h2 className="text-xl font-bold text-gray-900 mt-6">1. Общие положения</h2>
-        <p>Мы обрабатываем персональные данные в соответствии с Федеральным законом №152-ФЗ «О персональных данных».</p>
-        <h2 className="text-xl font-bold text-gray-900 mt-6">2. Какие данные мы собираем</h2>
-        <p>Имя, телефон, электронная почта, информация о заявках и обращениях.</p>
-        <h2 className="text-xl font-bold text-gray-900 mt-6">3. Цели обработки</h2>
-        <p>Обработка данных осуществляется для связи с пользователями, обработки заявок, предоставления услуг.</p>
-        <h2 className="text-xl font-bold text-gray-900 mt-6">4. Защита данных</h2>
-        <p>Мы принимаем необходимые организационные и технические меры для защиты персональных данных.</p>
-        <h2 className="text-xl font-bold text-gray-900 mt-6">5. Контакты</h2>
-        <p>По вопросам обработки персональных данных обращайтесь по электронной почте, указанной в разделе контактов.</p>
+    <div className="max-w-3xl mx-auto px-4 py-16">
+      <h1 className="font-display text-3xl font-semibold text-forest-900 mb-6">Политика конфиденциальности</h1>
+      <div className="space-y-4 text-forest-700/90 leading-relaxed text-[15px]">
+        <p>Садовый центр «Крокус» (г. Краснодар, Ростовское ш., 30/1) обрабатывает персональные данные пользователей сайта исключительно для обработки заявок на консультацию, подбор растений, доставку и посадку.</p>
+        <p>Мы собираем только имя и номер телефона (при необходимости — e-mail), которые вы оставляете добровольно через формы на сайте. Данные не передаются третьим лицам, кроме случаев, предусмотренных законодательством РФ.</p>
+        <p>Вы можете отозвать согласие на обработку персональных данных в любой момент — позвонив нам или написав на {useStore.getState().settings.email}. Отзыв не влияет на уже выполненные заказы.</p>
+        <p>Сайт может использовать обезличенные данные посещений (аналитика) для улучшения сервиса.</p>
+        <div className="pt-4"><Button to="/personal-data-consent" variant="outline">Согласие на обработку данных</Button></div>
       </div>
     </div>
   );
@@ -597,17 +429,26 @@ export function PrivacyPolicyPage() {
 
 export function PersonalDataConsentPage() {
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-3xl font-bold text-gray-900 mb-6">Согласие на обработку персональных данных</h1>
-      <div className="prose text-gray-600 space-y-4">
-        <p>Я, пользователь сайта, оставляя заявку или регистрируясь на сайте, даю согласие на обработку моих персональных данных.</p>
-        <h2 className="text-xl font-bold text-gray-900 mt-6">Перечень данных</h2>
-        <p>Фамилия, имя, телефон, адрес электронной почты, информация о заявках.</p>
-        <h2 className="text-xl font-bold text-gray-900 mt-6">Цели обработки</h2>
-        <p>Обработка заявок, связь с пользователем, предоставление информации об услугах.</p>
-        <h2 className="text-xl font-bold text-gray-900 mt-6">Срок действия согласия</h2>
-        <p>Согласие действует до момента его отзыва путём направления письменного уведомления.</p>
+    <div className="max-w-3xl mx-auto px-4 py-16">
+      <h1 className="font-display text-3xl font-semibold text-forest-900 mb-6">Согласие на обработку персональных данных</h1>
+      <div className="space-y-4 text-forest-700/90 leading-relaxed text-[15px]">
+        <p>Отправляя форму на сайте crocus-krd.ru, субъект персональных данных свободно, своей волей и в своём интересе даёт согласие на обработку персональных данных (имя, номер телефона, адрес электронной почты) оператором — садовым центром «Крокус».</p>
+        <p>Цели обработки: обратный звонок, консультация агронома, оформление заказа растений, расчёт стоимости доставки и посадки, информирование об акциях.</p>
+        <p>Перечень действий: сбор, запись, систематизация, накопление, уточнение, использование, передача уполномоченным сотрудникам оператора, хранение, уничтожение. Срок согласия — до отзыва путём направления письменного заявления оператору.</p>
       </div>
+      <div className="mt-8"><Button to="/contacts">← Перейти к формам заявки</Button></div>
+    </div>
+  );
+}
+
+// ==================== 404 ====================
+export function NotFoundSimple({ label = 'Страница не найдена' }: { label?: string }) {
+  return (
+    <div className="min-h-[55vh] flex flex-col items-center justify-center text-center px-4">
+      <div className="font-display text-7xl font-bold text-forest-200 mb-4">🌱</div>
+      <h1 className="font-display text-3xl font-semibold text-forest-900">{label}</h1>
+      <p className="text-forest-600 mt-3 mb-8">Похоже, здесь ещё ничего не посажено. Вернёмся в питомник?</p>
+      <Button to="/" size="lg">На главную</Button>
     </div>
   );
 }

@@ -1,187 +1,276 @@
-import { Product, Category, Tariff, Service, Lead, ContentBlock, SiteSettings, FAQItem, CalculatorDefaults } from './types';
+import { Product, Category, Tariff, Service, Lead, ContentBlock, SiteSettings, FAQItem, CalculatorDefaults, Review, BlogPost } from './types';
 
+// ==================== КАТЕГОРИИ ====================
 export const defaultCategories: Category[] = [
-  { id: 'cat-1', slug: 'home-3d', name: '3D-печатные товары для дома', description: 'Функциональные и декоративные изделия для интерьера', order: 1, status: 'published' },
-  { id: 'cat-2', slug: 'organizers', name: 'Органайзеры и держатели', description: 'Системы хранения и организации пространства', order: 2, status: 'published' },
-  { id: 'cat-3', slug: 'kitchen', name: 'Кухонные аксессуары', description: 'Полезные мелочи для кухни', order: 3, status: 'published' },
-  { id: 'cat-4', slug: 'auto', name: 'Товары для автомобиля', description: 'Аксессуары для авто', order: 4, status: 'published' },
-  { id: 'cat-5', slug: 'craft', name: 'Аксессуары для творчества', description: 'Инструменты и заготовки', order: 5, status: 'published' },
-  { id: 'cat-6', slug: 'plywood', name: 'Фанерные заготовки', description: 'Изделия из лазерной резки', order: 6, status: 'published' },
+  { id: 'cat-1', slug: 'hvoynye', name: 'Хвойные деревья и кустарники', description: 'Туи, можжевельники, кипарисы, сосны, ели, тисы — вечнозелёная основа сада круглый год', image: 'https://images.unsplash.com/photo-1597848212624-a19d1b3e6f0b?w=800&h=600&fit=crop', order: 1, status: 'published' },
+  { id: 'cat-2', slug: 'listvennye', name: 'Лиственные деревья и кустарники', description: 'Бересклет, фотиния, лавровишня, самшит, гортензии и другие декоративные культуры', image: 'https://images.unsplash.com/photo-1545558014-631c4e2084f6?w=800&h=600&fit=crop', order: 2, status: 'published' },
+  { id: 'cat-3', slug: 'plodovye', name: 'Плодовые культуры', description: 'Фруктовые деревья, ягодные кустарники и виноград для южного климата', image: 'https://images.unsplash.com/photo-1567313043419-334ba109bafb?w=800&h=600&fit=crop', order: 3, status: 'published' },
+  { id: 'cat-4', slug: 'rassada', name: 'Рассада и многолетники', description: 'Декоративно-цветочные и декоративно-лиственные культуры для клумб и контейнеров', image: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800&h=600&fit=crop', order: 4, status: 'published' },
+  { id: 'cat-5', slug: 'topiary', name: 'Топиарные формы и редкие сорта', description: 'Спирали, конусы, помпоны и коллекционные растения, которых нет у других', image: 'https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?w=800&h=600&fit=crop', order: 5, status: 'published' },
+  { id: 'cat-6', slug: 'soputstvuyushchie', name: 'Сопутствующие товары', description: 'Грунты и дренаж, удобрения и стимуляторы, средства защиты растений', image: 'https://images.unsplash.com/photo-1463320726-f1f964a7ef3a?w=800&h=600&fit=crop', order: 6, status: 'published' },
 ];
+
+// ==================== ТОВАРЫ ====================
+const plantImg = (name: string) => `https://crocus-krd.ru/wp-content/uploads/2025/12/${name}.webp`;
 
 export const defaultProducts: Product[] = [
   {
-    id: 'prod-1', slug: 'organizer-desk', name: 'Настольный органайзер «Модуль»', sku: 'ORG-DSK-001',
-    categoryId: 'cat-2', material: 'PLA пластик', color: 'Белый', weight: 180, length: 150, width: 100, height: 80,
-    packageLength: 170, packageWidth: 120, packageHeight: 100, packageWeight: 30,
-    country: 'Россия', productionTime: 2, productionTimeUnit: 'дня', minOrder: 10, stock: 150,
-    retailPrice: 890, wholesalePrice: 320, currency: 'RUB',
-    shortDescription: 'Модульный настольный органайзер для канцелярии и мелочей. Собирается в любую конфигурацию.',
-    fullDescription: 'Универсальный настольный органайзер из прочного PLA-пластика. Модульная конструкция позволяет собирать комбинации под ваши задачи: для ручек, карандашей, скрепок, телефона и других мелочей. Идеально подходит для продажи на маркетплейсах как товар для дома и офиса.',
-    images: [{ id: 'img-1', url: 'https://images.unsplash.com/photo-1586075010923-2dd4564e0b53?w=600&h=400&fit=crop', alt: 'Настольный органайзер', isMain: true, order: 1 }],
+    id: 'prod-1', slug: 'tis-yagodnyj-konus', name: 'Тис ягодный Конус', sku: 'TIS-KNS-200',
+    categoryId: 'cat-1', material: 'Живое растение', color: 'Тёмно-зелёный', height: 200,
+    country: 'Питомник «Крокус», Краснодарский край', minOrder: 1, stock: 12,
+    retailPrice: 23000, wholesalePrice: 23000, currency: 'RUB',
+    shortDescription: 'Элегантная топиарная форма конуса из вечнозелёного тиса ягодного. Идеальна для парадного входа и аллеи.',
+    fullDescription: 'Тис ягодный (Taxus baccata) в формованной форме конуса высотой около 2 м. Вечнозелёная хвойная культура с плотной тёмно-зелёной кроной, отлично переносит стрижку и южное солнце. Растение выращено в нашем питомнике и полностью адаптировано к климату Краснодарского края. Идеально подходит для создания торжественных аллей, оформления входа и солитерных посадок. Доставка и посадка — по договорённости.',
+    images: [{ id: 'img-1', url: plantImg('tis-yagodnyj-konus'), alt: 'Тис ягодный конус', isMain: true, order: 1 }],
     variants: [
-      { id: 'v-1', name: 'Белый', sku: 'ORG-DSK-001-W', price: 320, stock: 80, images: [], attributes: { color: 'Белый' } },
-      { id: 'v-2', name: 'Чёрный', sku: 'ORG-DSK-001-B', price: 320, stock: 50, images: [], attributes: { color: 'Чёрный' } },
-      { id: 'v-3', name: 'Серый', sku: 'ORG-DSK-001-G', price: 340, stock: 20, images: [], attributes: { color: 'Серый' } },
+      { id: 'v-1', name: 'Высота 150 см', price: 18000, stock: 5, images: [], attributes: { height: '150 см' } },
+      { id: 'v-2', name: 'Высота 200 см', price: 23000, stock: 7, images: [], attributes: { height: '200 см' } },
     ],
-    attributes: { 'Тип': 'Модульный', 'Способ крепления': 'Без крепления', 'Количество отсеков': '4-8' },
-    seoTitle: 'Настольный органайзер модульный — купить оптом', seoDescription: 'Модульный настольный органайзер из PLA-пластика. Оптом от 10 шт. Производство в России.',
-    status: 'published', isFeatured: true, createdAt: '2024-01-15', updatedAt: '2024-03-01'
+    attributes: { 'Высота': 'до 200 см', 'Форма': 'Конус', 'Свет': 'Солнце / полутень', 'Морозостойкость': 'Высокая', 'Грунт': 'Плодородный, дренированный' },
+    seoTitle: 'Тис ягодный конус — купить в Краснодаре', seoDescription: 'Формованный тис ягодный в виде конуса. Выращен в питомнике «Крокус», адаптация к южному климату. Доставка и посадка.',
+    status: 'published', isFeatured: true, createdAt: '2025-12-01', updatedAt: '2026-03-01'
   },
   {
-    id: 'prod-2', slug: 'phone-holder', name: 'Держатель для телефона «Угол»', sku: 'PH-HLD-002',
-    categoryId: 'cat-2', material: 'PLA пластик', color: 'Чёрный', weight: 95, length: 80, width: 70, height: 120,
-    packageLength: 100, packageWidth: 90, packageHeight: 140, packageWeight: 20,
-    country: 'Россия', productionTime: 1, productionTimeUnit: 'день', minOrder: 20, stock: 300,
-    retailPrice: 490, wholesalePrice: 150, currency: 'RUB',
-    shortDescription: 'Эргономичный держатель для смартфона с регулировкой угла наклона.',
-    fullDescription: 'Компактный настольный держатель для смартфонов от 4 до 7 дюймов. Регулируемый угол наклона, прорезиненные ножки против скольжения. Подходит для видеозвонков, просмотра видео и навигации. Отличный товар для маркетплейсов с высокой маржинальностью.',
-    images: [{ id: 'img-2', url: 'https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=600&h=400&fit=crop', alt: 'Держатель для телефона', isMain: true, order: 1 }],
-    variants: [
-      { id: 'v-4', name: 'Чёрный', sku: 'PH-HLD-002-B', price: 150, stock: 200, images: [], attributes: { color: 'Чёрный' } },
-      { id: 'v-5', name: 'Белый', sku: 'PH-HLD-002-W', price: 150, stock: 100, images: [], attributes: { color: 'Белый' } },
-    ],
-    attributes: { 'Совместимость': '4-7 дюймов', 'Регулировка угла': 'Да', 'Антискольжение': 'Да' },
-    status: 'published', isFeatured: true, createdAt: '2024-01-20', updatedAt: '2024-02-15'
-  },
-  {
-    id: 'prod-3', slug: 'cable-organizer', name: 'Органайзер для кабелей «Порядок»', sku: 'CBL-ORG-003',
-    categoryId: 'cat-1', material: 'PLA пластик', color: 'Белый', weight: 60, length: 120, width: 40, height: 30,
-    packageLength: 140, packageWidth: 60, packageHeight: 40, packageWeight: 15,
-    country: 'Россия', productionTime: 1, productionTimeUnit: 'день', minOrder: 30, stock: 500,
-    retailPrice: 350, wholesalePrice: 95, currency: 'RUB',
-    shortDescription: 'Компактный органайзер для зарядных кабелей и проводов. 5 слотов.',
-    fullDescription: 'Аккуратный органайзер для кабелей с 5 отделениями разного размера. Крепится к столу на двусторонний скотч. Подходит для зарядных устройств, USB-кабелей, наушников. Высокий спрос на маркетплейсах, низкая себестоимость.',
-    images: [{ id: 'img-3', url: 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=600&h=400&fit=crop', alt: 'Органайзер для кабелей', isMain: true, order: 1 }],
+    id: 'prod-2', slug: 'beresklet-elegantissima-aurea', name: 'Бересклет японский Элегантиссима Ауреа, многоствольный', sku: 'BRS-AUR-MULTI',
+    categoryId: 'cat-2', material: 'Живое растение', country: 'Питомник «Крокус», Краснодарский край',
+    minOrder: 1, stock: 18, retailPrice: 22000, wholesalePrice: 22000, currency: 'RUB',
+    shortDescription: 'Яркий многоствольный бересклет с золотисто-вариегатной листвой. Солнцелюбив и не требует сложного ухода.',
+    fullDescription: 'Euonymus japonicus Elegantissima Aurea — эффектный вечнозелёный кустарник с кремово-золотистой каймой по краю листа. Многоствольная форма создаёт пышный куст, который становится ярким акцентом сада. Отлично переносит южное солнце, засуху и городские условия, легко формируется. Выращен в нашем питомнике в Краснодаре.',
+    images: [{ id: 'img-2', url: plantImg('beresklet-yaponskij-elegantissima-aurea-mnogostvolnyj'), alt: 'Бересклет японский Элегантиссима Ауреа', isMain: true, order: 1 }],
     variants: [],
-    attributes: { 'Количество слотов': '5', 'Крепление': 'Двусторонний скотч' },
-    status: 'published', isFeatured: true, createdAt: '2024-02-01', updatedAt: '2024-02-28'
+    attributes: { 'Форма': 'Многоствольная', 'Свет': 'Солнце', 'Полив': 'Умеренный', 'Стрижка': 'Легко формируется' },
+    status: 'published', isFeatured: true, createdAt: '2025-12-01', updatedAt: '2026-03-01'
   },
   {
-    id: 'prod-4', slug: 'car-phone-mount', name: 'Автомобильный держатель «Клип»', sku: 'CAR-MNT-004',
-    categoryId: 'cat-4', material: 'ABS пластик', color: 'Чёрный', weight: 120, length: 90, width: 70, height: 110,
-    packageLength: 110, packageWidth: 90, packageHeight: 130, packageWeight: 25,
-    country: 'Россия', productionTime: 2, productionTimeUnit: 'дня', minOrder: 15, stock: 80,
-    retailPrice: 690, wholesalePrice: 250, currency: 'RUB',
-    shortDescription: 'Универсальный автомобильный держатель для телефона на вентиляционную решётку.',
-    fullDescription: 'Надёжный автомобильный держатель с креплением на вентиляционную решётку. Поворот на 360°, одна рука для установки телефона. Совместим со смартфонами 4.7-6.8 дюймов. Магнитное или механическое крепление на выбор.',
-    images: [{ id: 'img-4', url: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=600&h=400&fit=crop', alt: 'Автомобильный держатель', isMain: true, order: 1 }],
-    variants: [
-      { id: 'v-6', name: 'Механический', sku: 'CAR-MNT-004-M', price: 250, stock: 50, images: [], attributes: { type: 'Механический' } },
-      { id: 'v-7', name: 'Магнитный', sku: 'CAR-MNT-004-MG', price: 280, stock: 30, images: [], attributes: { type: 'Магнитный' } },
-    ],
-    attributes: { 'Поворот': '360°', 'Совместимость': '4.7-6.8"' },
-    status: 'published', isFeatured: false, createdAt: '2024-02-10', updatedAt: '2024-03-05'
-  },
-  {
-    id: 'prod-5', slug: 'cookie-cutters-set', name: 'Набор формочек для печенья «Праздник»', sku: 'CKI-SET-005',
-    categoryId: 'cat-3', material: 'PETG пластик', color: 'Разноцветный', weight: 150, length: 200, width: 150, height: 30,
-    packageLength: 220, packageWidth: 170, packageHeight: 40, packageWeight: 20,
-    country: 'Россия', productionTime: 3, productionTimeUnit: 'дня', minOrder: 10, stock: 60,
-    retailPrice: 590, wholesalePrice: 180, currency: 'RUB',
-    shortDescription: 'Набор из 6 фигурных формочек для печенья. Безопасный пищевой пластик.',
-    fullDescription: 'Набор из 6 формочек для печенья: ёлочка, звезда, сердечко, круг, домик, снежинка. Изготовлены из пищевого PETG-пластика, безопасны при контакте с пищевыми продуктами. Яркая подарочная упаковка в комплекте.',
-    images: [{ id: 'img-5', url: 'https://images.unsplash.com/photo-1558303009-46a38d85c86f?w=600&h=400&fit=crop', alt: 'Формочки для печенья', isMain: true, order: 1 }],
+    id: 'prod-3', slug: 'fotiniya-red-robin-konus', name: 'Фотиния Фрезера Ред Робин, конус', sku: 'FTN-RDR-KNS',
+    categoryId: 'cat-5', material: 'Живое растение', country: 'Питомник «Крокус», Краснодарский край',
+    minOrder: 1, stock: 9, retailPrice: 40000, wholesalePrice: 40000, currency: 'RUB',
+    shortDescription: 'Роскошная фотиния с алыми молодыми побегами в формованной конической форме.',
+    fullDescription: 'Photinia × fraseri Red Robin — звезда южных садов: весной и летом растение выбрасывает ярко-красные молодые листья, контрастирующие с тёмно-зелёной кроной. Форма конус получена многолетней формовкой наших специалистов. Прекрасно растёт на солнце, устойчива к жаре Краснодара. Смотрится солидно у входа, в группах и живых изгородях.',
+    images: [{ id: 'img-3', url: plantImg('fotiniya-frezera-red-robin-konus'), alt: 'Фотиния Фрезера Ред Робин конус', isMain: true, order: 1 }],
     variants: [],
-    attributes: { 'Количество в наборе': '6', 'Пищевой пластик': 'Да', 'Упаковка': 'Подарочная коробка' },
-    status: 'published', isFeatured: true, createdAt: '2024-02-15', updatedAt: '2024-03-01'
+    attributes: { 'Форма': 'Конус', 'Окраска молодых листьев': 'Алая', 'Свет': 'Солнце', 'Цветение': 'Белые щитки, май' },
+    status: 'published', isFeatured: true, createdAt: '2025-12-02', updatedAt: '2026-03-01'
   },
   {
-    id: 'prod-6', slug: 'plywood-box-decor', name: 'Фанерная шкатулка «Узор» для декорирования', sku: 'PLY-BOX-006',
-    categoryId: 'cat-6', material: 'Фанера 3мм', color: 'Натуральный', weight: 200, length: 150, width: 100, height: 60,
-    packageLength: 170, packageWidth: 120, packageHeight: 80, packageWeight: 30,
-    country: 'Россия', productionTime: 1, productionTimeUnit: 'день', minOrder: 20, stock: 200,
-    retailPrice: 450, wholesalePrice: 120, currency: 'RUB',
-    shortDescription: 'Разборная фанерная шкатулка с ажурными узорами для декорирования.',
-    fullDescription: 'Шкатулка из берёзовой фанеры 3мм с лазерной резкой. Поставляется в разобранном виде — идеально для творческих мастерских, хобби-маркетплейсов. Можно декорировать красками, декупажем, выжиганием.',
-    images: [{ id: 'img-6', url: 'https://images.unsplash.com/photo-1513519245088-0e12902e35ca?w=600&h=400&fit=crop', alt: 'Фанерная шкатулка', isMain: true, order: 1 }],
+    id: 'prod-4', slug: 'kiparis-gold-raider-spiral', name: 'Кипарис Лейланда Голд Райдер, спираль', sku: 'KPR-SPR-001',
+    categoryId: 'cat-5', material: 'Живое растение', country: 'Питомник «Крокус», Краснодарский край',
+    minOrder: 1, stock: 4, retailPrice: 35000, wholesalePrice: 35000, currency: 'RUB',
+    shortDescription: 'Золотистый кипарис в эффектной спиральной форме — авторская работа наших топиарных мастеров.',
+    fullDescription: 'Cupressus × leylandii Gold Rider — быстрорастущий кипарис с лимонно-золотистой хвоей. Спиральная форма сформирована вручную и поддерживается регулярной стрижкой. Такое растение станет доминантой участка и объектом всеобщего внимания. Устойчив к южной жаре, хорошо отзывается на стрижку.',
+    images: [{ id: 'img-4', url: plantImg('kiparis-lejlanda-gold-rajder-spiral'), alt: 'Кипарис Лейланда Голд Райдер спираль', isMain: true, order: 1 }],
+    variants: [],
+    attributes: { 'Форма': 'Спираль', 'Окраска хвои': 'Золотисто-жёлтая', 'Скорость роста': 'Быстрая', 'Свет': 'Солнце' },
+    status: 'published', isFeatured: true, createdAt: '2025-12-02', updatedAt: '2026-02-20'
+  },
+  {
+    id: 'prod-5', slug: 'kiparis-lejlanda', name: 'Кипарис Лейланда', sku: 'KPR-STD-002',
+    categoryId: 'cat-1', material: 'Живое растение', country: 'Питомник «Крокус», Краснодарский край',
+    minOrder: 1, stock: 220, retailPrice: 1900, wholesalePrice: 1900, currency: 'RUB',
+    shortDescription: 'Классический быстрорастущий кипарис для живых изгородей и рядовых посадок.',
+    fullDescription: 'Cupressus × leylandii — один из лучших вариантов для быстрозаживающей живой изгороди на юге. Прирост до 60 см в год, плотная вечнозелёная хвоя, терпимость к стрижке и городским условиям. В наличии растения разных размеров — от контейнеров 3 л до крупных экземпляров.',
+    images: [{ id: 'img-5', url: plantImg('kiparis-lejlanda'), alt: 'Кипарис Лейланда', isMain: true, order: 1 }],
     variants: [
-      { id: 'v-8', name: 'Малая', sku: 'PLY-BOX-006-S', price: 120, stock: 120, images: [], attributes: { size: '15×10×6 см' } },
-      { id: 'v-9', name: 'Большая', sku: 'PLY-BOX-006-L', price: 180, stock: 80, images: [], attributes: { size: '20×15×8 см' } },
+      { id: 'v-5', name: 'Контейнер 3 л (60–80 см)', price: 1900, stock: 120, images: [], attributes: { pot: '3 л' } },
+      { id: 'v-6', name: 'Контейнер 10 л (120–150 см)', price: 4500, stock: 70, images: [], attributes: { pot: '10 л' } },
+      { id: 'v-7', name: 'Крупномер 20 л (180–220 см)', price: 9500, stock: 30, images: [], attributes: { pot: '20 л' } },
     ],
-    attributes: { 'Материал': 'Берёзовая фанера 3мм', 'Сборка': 'Без клея, паз-шип' },
-    status: 'published', isFeatured: false, createdAt: '2024-02-20', updatedAt: '2024-03-02'
+    attributes: { 'Прирост в год': 'до 60 см', 'Применение': 'Живая изгородь, аллеи', 'Свет': 'Солнце / полутень' },
+    status: 'published', isFeatured: true, createdAt: '2025-12-03', updatedAt: '2026-03-05'
+  },
+  {
+    id: 'prod-6', slug: 'sosna-vejmutova-pendula', name: 'Сосна Веймутова Пендула', sku: 'PSH-PND-003',
+    categoryId: 'cat-1', material: 'Живое растение', country: 'Питомник «Крокус», Краснодарский край',
+    minOrder: 1, stock: 6, retailPrice: 41000, wholesalePrice: 41000, currency: 'RUB',
+    shortDescription: 'Плакучая форма сосны Веймутова с мягкими голубоватыми нитевидными хвоинками.',
+    fullDescription: 'Pinus strobus Pendula — изысканная плакучая форма с ниспадающими побегами и серебристо-голубой хвоей. Каждое растение формировано в течение нескольких лет, поэтому рисунок кроны уникален. Предпочитает лёгкие плодородные грунты и солнечные места. Коллекционный экземпляр для престижного участка.',
+    images: [{ id: 'img-6', url: plantImg('sosna-vejmutova-pendula'), alt: 'Сосна Веймутова Пендула', isMain: true, order: 1 }],
+    variants: [],
+    attributes: { 'Форма кроны': 'Плакучая', 'Хвоя': 'Мягкая, голубовато-зелёная', 'Свет': 'Солнце' },
+    status: 'published', isFeatured: true, createdAt: '2025-12-03', updatedAt: '2026-01-15'
+  },
+  {
+    id: 'prod-7', slug: 'plyushch-obyknovennyj-erekta', name: 'Плющ обыкновенный Эректа', sku: 'HED-ERK-004',
+    categoryId: 'cat-2', material: 'Живое растение', country: 'Питомник «Крокус», Краснодарский край',
+    minOrder: 1, stock: 85, retailPrice: 2300, wholesalePrice: 2300, currency: 'RUB',
+    shortDescription: 'Вертикальный плющ с плотной кожистой листвой. Идеален для зелёных стен без опоры.',
+    fullDescription: 'Hedera helix Erecta — колонновидный сорт плюща, который не требует опоры и держит форму компактного куста. Вечнозелёный, теневыносливый, быстро озеленяет заборы, стены и проблемные участки. Отлично чувствует себя в контейнерах и открытом грунте на юге.',
+    images: [{ id: 'img-7', url: plantImg('plyushh-obyknovennyj-erekta'), alt: 'Плющ обыкновенный Эректа', isMain: true, order: 1 }],
+    variants: [],
+    attributes: { 'Тип роста': 'Вертикальный', 'Теневыносливость': 'Высокая', 'Полив': 'Регулярный' },
+    status: 'published', isFeatured: false, createdAt: '2025-12-04', updatedAt: '2026-02-10'
+  },
+  {
+    id: 'prod-8', slug: 'fotiniya-pink-marbl', name: 'Фотиния Фразера Пинк Марбл, многоствольная', sku: 'FTN-PKM-MULTI',
+    categoryId: 'cat-2', material: 'Живое растение', country: 'Питомник «Крокус», Краснодарский край',
+    minOrder: 1, stock: 7, retailPrice: 25000, wholesalePrice: 25000, currency: 'RUB',
+    shortDescription: 'Розово-пёстрая фотиния редкого сорта — окрашивает сад в нежные тона всю весну.',
+    fullDescription: 'Photinia × fraseri Pink Marble — сорт с розово-бело-зелёной вариегатной листвой. Молодые приросты окрашены в насыщенный розовый, позже листва становится пёстрой. Многоствольная форма даёт объём и пышность. Редкая коллекционная позиция, которую сложно найти в рознице.',
+    images: [{ id: 'img-8', url: plantImg('fotiniya-frazera-pink-marbl-mnogostvolnaya'), alt: 'Фотиния Пинк Марбл', isMain: true, order: 1 }],
+    variants: [],
+    attributes: { 'Окраска листвы': 'Розово-пёстрая', 'Форма': 'Многоствольная', 'Свет': 'Солнце' },
+    status: 'published', isFeatured: true, createdAt: '2025-12-04', updatedAt: '2026-02-28'
+  },
+  {
+    id: 'prod-9', slug: 'lavrovishnya-novita', name: 'Лавровишня лекарственная Новита', sku: 'LNR-NVT-005',
+    categoryId: 'cat-2', material: 'Живое растение', country: 'Питомник «Крокус», Краснодарский край',
+    minOrder: 1, stock: 300, retailPrice: 650, wholesalePrice: 650, currency: 'RUB',
+    shortDescription: 'Неприхотливая вечнозелёная лавровишня — лучший бюджетный вариант для живой изгороди на юге.',
+    fullDescription: 'Prunus laurocerasus Novita — компактная форма лавровишни с глянцевыми тёмно-зелёными листьями. Растёт на солнце и в тени, прощает нерегулярный полив, стрижётся до любой формы. Весной украшена белыми свечками соцветий. Лучшая цена сезона для изгородей и фоновых посадок.',
+    images: [{ id: 'img-9', url: plantImg('lavrovishnya-lekarstvennaya-novita'), alt: 'Лавровишня Новита', isMain: true, order: 1 }],
+    variants: [
+      { id: 'v-9', name: 'Контейнер 2 л (40–60 см)', price: 650, stock: 180, images: [], attributes: { pot: '2 л' } },
+      { id: 'v-10', name: 'Контейнер 5 л (80–100 см)', price: 1400, stock: 90, images: [], attributes: { pot: '5 л' } },
+      { id: 'v-11', name: 'Контейнер 15 л (130–160 см)', price: 3900, stock: 30, images: [], attributes: { pot: '15 л' } },
+    ],
+    attributes: { 'Тип': 'Вечнозелёный кустарник', 'Применение': 'Изгородь, группы', 'Стрижка': '2 раза за сезон' },
+    status: 'published', isFeatured: false, createdAt: '2025-12-05', updatedAt: '2026-03-02'
+  },
+  {
+    id: 'prod-10', slug: 'leukotoe-miks', name: 'Леукоэ микс', sku: 'LEU-MIX-006',
+    categoryId: 'cat-4', material: 'Живое растение', country: 'Питомник «Крокус», Краснодарский край',
+    minOrder: 1, stock: 140, retailPrice: 2100, wholesalePrice: 2100, currency: 'RUB',
+    shortDescription: 'Компактные кустарнички с белоснежными кистями цветов и поникающими ветвями.',
+    fullDescription: 'Leucothoe — изящный вечнозелёный кустарник с поникающими ветвями и ароматными белыми кистями цветов весной. Микс сортов разных оттенков листвы — от изумрудной до бронзовой. Подходит для контейнерных композиций, бордюров и полутенистых уголков сада.',
+    images: [{ id: 'img-10', url: plantImg('leukotoe-miks'), alt: 'Леукоэ микс', isMain: true, order: 1 }],
+    variants: [],
+    attributes: { 'Цветение': 'Апрель–май', 'Высота': '60–90 см', 'Свет': 'Полутень' },
+    status: 'published', isFeatured: false, createdAt: '2025-12-05', updatedAt: '2026-02-14'
+  },
+  {
+    id: 'prod-11', slug: 'rulonnyj-gazon', name: 'Рулонный газон, м²', sku: 'GRZ-RUL-007',
+    categoryId: 'cat-6', material: 'Травосмесь мятлик/райграс', country: 'Собственные поля, Краснодарский край',
+    minOrder: 50, stock: 4000, retailPrice: 520, wholesalePrice: 520, currency: 'RUB',
+    shortDescription: 'Плотный зелёный рулонный газон с собственных полей. Укладка «под ключ» бригадой центра.',
+    fullDescription: 'Рулонный газон выращивается на собственных полях садового центра «Крокус». Плотная травосмесь зимостойких мятликов и райграса, адаптированная к южному климату. Режем рулоны день-в-день, поэтому трава приезжает свежей. Возможна доставка, подготовка основания и укладка нашей бригадой — газон «под ключ» за один день.',
+    images: [{ id: 'img-11', url: plantImg('rulonnyj-gazon-1'), alt: 'Рулонный газон', isMain: true, order: 1 }],
+    variants: [
+      { id: 'v-12', name: 'Газон, м² (самовывоз)', price: 520, stock: 4000, images: [], attributes: {} },
+      { id: 'v-13', name: 'Укладка под ключ, м²', price: 750, stock: 2000, images: [], attributes: { service: 'with laying' } },
+    ],
+    attributes: { 'Размер рулона': '0,4 × 2 м (0,8 м²)', 'Состав': 'Мятлик луговой, райграс', 'Полив после укладки': 'Ежедневно 7–10 дней' },
+    status: 'published', isFeatured: true, createdAt: '2025-12-06', updatedAt: '2026-03-10'
+  },
+  {
+    id: 'prod-12', slug: 'kiparis-gold-raider-pompon', name: 'Кипарис Лейланда Голд Райдер, помпон', sku: 'KPR-PMP-008',
+    categoryId: 'cat-5', material: 'Живое растение', country: 'Питомник «Крокус», Краснодарский край',
+    minOrder: 1, stock: 3, retailPrice: 60000, wholesalePrice: 60000, currency: 'RUB',
+    shortDescription: 'Шикарный золотой шар-помпон на штамбе — вершинная работа топиарного искусства.',
+    fullDescription: 'Cupressus × leylandii Gold Rider в форме идеального золотого помпона на штамбе. Формировка занимает несколько лет ежедневного труда наших мастеров. Такие растения заказывают для резиденций, отелей и ресторанов. Эксклюзив садового центра «Крокус».',
+    images: [{ id: 'img-12', url: plantImg('kiparis-lejlanda-gold-rajder-pompon'), alt: 'Кипарис Голд Райдер помпон', isMain: true, order: 1 }],
+    variants: [],
+    attributes: { 'Форма': 'Помпон на штамбе', 'Диаметр шара': '90–110 см', 'Высота штамба': '120–150 см' },
+    status: 'published', isFeatured: true, createdAt: '2025-12-06', updatedAt: '2026-01-30'
   },
 ];
 
+// ==================== УСЛУГИ ====================
+export const defaultServices: Service[] = [
+  { id: 'srv-1', slug: 'landshaftnyj-dizajn', name: 'Ландшафтный дизайн', shortDescription: 'Проект сада с учётом южного климата: подбор растений, схема посадки, визуализация', fullDescription: 'Наши ландшафтные архитекторы разработают проект вашего сада от концепции до рабочей документации: дендроплан, ассортиментная ведомость, система полива, освещение и малые формы. Учитываем розы ветров, инсоляцию и состав грунта вашего участка в Краснодарском крае. Подбор растений — с гарантией приживаемости из нашего питомника.', price: 'от 500 ₽/сотка', order: 1, status: 'published' },
+  { id: 'srv-2', slug: 'rulonnyj-gazon', name: 'Рулонный газон', shortDescription: 'Газон с собственных полей: доставка, подготовка основания, укладка за один день', fullDescription: 'Полный цикл: срезка свежих рулонов день-в-день, доставка, планировка и удобрение основания, укладка с раскаткой и первый полив. Даём рекомендации по уходу и гарантию приживления при заказе укладки нашей бригадой.', price: 'от 520 ₽/м²', order: 2, status: 'published' },
+  { id: 'srv-3', slug: 'avtopoliv', name: 'Системы автополива', shortDescription: 'Проектирование и монтаж автоматического полива любой сложности', fullDescription: 'Проектируем и монтируем системы автоматического полива на базе Hunter и Rain Bird: зонирование, капельный полив, дождеватели, датчики дождя и влажности, диспетчеризация со смартфона. Монтаж выполняют штатные инженеры, обслуживание и зимняя консервация — тоже мы.', price: 'от 12 000 ₽/сотка', order: 3, status: 'published' },
+  { id: 'srv-4', slug: 'ozelenenie-ustroystvo', name: 'Озеленение и устройство сада', shortDescription: 'Посадка крупномеров, устройство клумб, живых изгородей и дренажа', fullDescription: 'Благоустройство «под ключ»: привозим и высаживаем растения (включая крупномеры с комлем), формируем клумбы и миксбордеры, закладываем живые изгороди, устраиваем дренаж и геопластику. Одна команда отвечает за весь цикл — от доставки до первой стрижки.', price: 'по проекту', order: 4, status: 'published' },
+  { id: 'srv-5', slug: 'dostavka-posadka', name: 'Доставка и посадка', shortDescription: 'Аккуратная доставка растений по Краснодару и краю, профессиональная посадка', fullDescription: 'Доставим купленные растения в сохранности по городу и краю. Посадка с подготовкой посадочной ямы, правильным грунтом, дренажом, мульчированием и первым влагозарядковым поливом. Для крупных экземпляров — бригада и техника.', price: 'от 1 500 ₽', order: 5, status: 'published' },
+  { id: 'srv-6', slug: 'import-rasteniy', name: 'Импорт растений под заказ', shortDescription: 'Привезём любое растение из Европы напрямую — на 20-30% выгоднее рынка', fullDescription: 'За счёт прямых импортных поставок из европейских питомников (Италия, Нидерланды, Польша, Бельгия) привозим редкие и коллекционные сорта под ваш запрос. Берём на себя фитосанитарное оформление, логистику и адаптацию. Срок — от 2 недель.', price: 'индивидуально', order: 6, status: 'published' },
+];
+
+// ==================== ПРОГРАММЫ СОТРУДНИЧЕСТВА ====================
 export const defaultTariffs: Tariff[] = [
   {
-    id: 'tar-1', name: 'Самостоятельный старт', shortDescription: 'Для тех, кто хочет начать самостоятельно',
-    price: 0, period: '', 
-    features: ['Доступ к полному каталогу товаров', 'Материалы для карточек (фото, описания)', 'Оптовые цены от производителя', 'Базовые консультации', 'Минимальная партия от 10 шт.'],
-    limitations: ['Без помощи с оформлением карточек', 'Самостоятельное управление магазином'],
-    buttonText: 'Начать сотрудничество', isRecommended: false, order: 1, status: 'published'
+    id: 'tar-1', name: 'Частный сад', shortDescription: 'Для владельцев участков и домов',
+    price: 0, period: 'скидка 10% при первой покупке',
+    features: ['Персональный подбор растений агрономом', 'Фото готовых композиций из портфолио', 'Гарантия приживаемости 99,9%', 'Бесплатная доставка от 30 000 ₽', 'Рекомендации по уходу в письменном виде'],
+    limitations: [],
+    buttonText: 'Получить консультацию', isRecommended: false, order: 1, status: 'published'
   },
   {
-    id: 'tar-2', name: 'Магазин под ключ', shortDescription: 'Полное сопровождение запуска продаж',
-    price: 15000, period: 'единоразово',
-    features: ['Всё из тарифа «Старт»', 'Помощь с регистрацией на маркетплейсе', 'Создание карточек товаров', 'Настройка поставок', 'Консультации по продвижению', 'Приоритетная поддержка'],
-    limitations: ['Сопровождение на этапе запуска'],
-    buttonText: 'Запустить магазин', isRecommended: true, order: 2, status: 'published'
+    id: 'tar-2', name: 'Сад под ключ', shortDescription: 'Полный цикл: проект → растения → посадка → автополив',
+    price: 0, period: 'по смете проекта',
+    features: ['Ландшафтный проект с визуализацией', 'Подбор и поставка растений из питомника', 'Посадка бригадой центра', 'Монтаж системы автополива', 'Рулонный газон с укладкой', 'Сопровождение первый сезон'],
+    limitations: ['Стоимость зависит от объёма работ'],
+    buttonText: 'Обсудить проект', isRecommended: true, order: 2, status: 'published'
   },
   {
-    id: 'tar-3', name: 'Производственный партнёр', shortDescription: 'Для масштабных продавцов',
+    id: 'tar-3', name: 'Партнёр-программа', shortDescription: 'Для ландшафтников, дизайнеров и прорабов',
     price: 0, period: 'индивидуальные условия',
-    features: ['Всё из тарифа «Магазин под ключ»', 'Изготовление по вашим моделям', 'Производство под ваши заказы', 'Условия хранения на складе', 'Услуги фулфилмента', 'Персональный менеджер', 'Отсрочка оплаты'],
+    features: ['Специальные цены по прайсу партнёра', 'Программа лояльности с накопительной скидкой', 'Приоритетное резервирование редких позиций', 'Импорт растений под объекты', 'Отсрочка платежа постоянным партнёрам', 'Персональный менеджер'],
     limitations: ['Обсуждаются индивидуально'],
-    buttonText: 'Обсудить условия', isRecommended: false, order: 3, status: 'published'
+    buttonText: 'Стать партнёром', isRecommended: false, order: 3, status: 'published'
   },
 ];
 
-export const defaultServices: Service[] = [
-  { id: 'srv-1', slug: '3d-printing', name: '3D-печать изделий', shortDescription: 'Печать пластиковых изделий на заказ по вашим моделям', fullDescription: 'Производство изделий методом FDM 3D-печати. Работаем с PLA, ABS, PETG, TPU. Точность до 0.1мм. Подходит для мелкосерийного производства и прототипирования.', price: 'от 50 ₽/шт', order: 1, status: 'published' },
-  { id: 'srv-2', slug: 'laser-cutting', name: 'Лазерная резка', shortDescription: 'Резка и гравировка фанеры, акрила, кожи', fullDescription: 'Лазерная резка листовых материалов: фанера до 10мм, акрил до 8мм, картон, кожа. Высокая точность, чистый рез. Гравировка логотипов и текстов.', price: 'от 30 ₽/деталь', order: 2, status: 'published' },
-  { id: 'srv-3', slug: 'fulfillment', name: 'Фулфилмент', shortDescription: 'Хранение, упаковка и отгрузка товаров на маркетплейсы', fullDescription: 'Полный цикл фулфилмента: приёмка товара, хранение на складе, комплектация заказов, маркировка, упаковка по требованиям маркетплейсов, отгрузка на склады WB, Ozon, Яндекс Маркет.', price: 'от 35 ₽/отправка', order: 3, status: 'published' },
-  { id: 'srv-4', slug: 'card-creation', name: 'Создание карточек', shortDescription: 'Профессиональные фото и описания для маркетплейсов', fullDescription: 'Создание продающих карточек товаров: предметная фотосъёмка, инфографика, SEO-оптимизированные описания, подбор ключевых слов. Увеличиваем конверсию карточек.', price: 'от 3000 ₽/карточка', order: 4, status: 'published' },
-  { id: 'srv-5', slug: 'custom-production', name: 'Производство по вашим чертежам', shortDescription: 'Изготовление изделий по вашим 3D-моделям и ТЗ', fullDescription: 'Производство изделий по вашим 3D-моделям, чертежам или техническому заданию. Поможем с доработкой модели, подбором материала и оптимизацией для производства.', price: 'по согласованию', order: 5, status: 'published' },
+// ==================== ОТЗЫВЫ (Яндекс Карты) ====================
+export const defaultReviews: Review[] = [
+  { id: 'rev-1', author: 'Logvinov53', rating: 5, source: 'Яндекс Карты', order: 1, text: 'Большой выбор цветов и древесной растительности. Удобный подъезд. Рядом «Метро» и Бауцентр. Выбирали дерево для торжественной посадки в КубГАУ — теперь платан растёт у входа в родное учебное заведение.' },
+  { id: 'rev-2', author: 'Кожемякина Евгения', rating: 5, source: 'Яндекс Карты', order: 2, text: 'Хороший посадочный материал. Соотношение цены и качества нас устраивают. Большой ассортимент как по сортам, так и по размерам. Всё, что здесь покупали, прекрасно прижилось даже при экстремальной жаре.' },
+  { id: 'rev-3', author: 'Arsen Kushkhov', rating: 5, source: 'Яндекс Карты', order: 3, text: 'Как по мне самый лучший питомник по ассортименту и отношению — я объездил их все. Растения хорошие, того чего не было — заказали из Италии, через пару недель дошло. 90% нужного купил тут.' },
+  { id: 'rev-4', author: 'Юлия Подолян', rating: 5, source: 'Яндекс Карты', order: 4, text: 'Хорошее местечко, большой выбор качественного посадочного материала! Помощь в доставке, всегда можно заказать что-то эксклюзивное по нормальной цене. Рекомендую!' },
+  { id: 'rev-5', author: 'София-Катерина', rating: 5, source: 'Яндекс Карты', order: 5, text: 'Самая лучшая из Краснодарских площадок. Выбор растений потрясающий, размерный ряд на любой бюджет, порядок на территории, всё чётко!' },
+  { id: 'rev-6', author: 'Денис М.', rating: 5, source: 'Яндекс Карты', order: 6, text: 'Замечательный питомник. Очень приятные цены. Грамотная консультация. Качество растений отличное! Есть программа лояльности для ландшафтников!' },
+  { id: 'rev-7', author: 'Виктор Клеймёнов', rating: 5, source: 'Яндекс Карты', order: 7, text: 'Очень большое разнообразие растений, цены ниже среднего по городу! Дорожки забетонированы, интересная планировка — гулять одно удовольствие. Расположение крайне удобное.' },
+  { id: 'rev-8', author: 'Михаил Г.', rating: 5, source: 'Яндекс Карты', order: 8, text: 'Хороший ассортимент, консультанты действительно специалисты, которые разбираются в растениях, а не продаваны.' },
 ];
 
+// ==================== БЛОГ ====================
+export const defaultBlogPosts: BlogPost[] = [
+  { id: 'blog-1', slug: 'rasteniya-dlya-zhivoy-izgorodi', title: 'Какие растения выбрать для живой изгороди в Краснодаре: от можжевельника до лавровишни', excerpt: 'Сравниваем вечнозелёные культуры для изгородей: скорость роста, цена, требования к уходу и итоговая плотность зелени.', content: 'Живая изгородь на юге может быть разной: быстрой и бюджетной (лавровишня, кипарис Лейланда), статусной и вечнозелёной (тис, самшит) или солитёрной пёстрой (фотиния, бересклет). Разбираем по сортам, ценам и скорости закрытия экрана — с реальным опытом нашего питомника.', image: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=800&h=500&fit=crop', date: '2026-02-11', category: 'Выбор растений', order: 1 },
+  { id: 'blog-2', slug: 'kalendar-posadok-krasnodar', title: 'Когда и как правильно сажать растения в южном климате: календарь посадок для Краснодара', excerpt: 'Осень — лучшее время посадки на юге. Объясняем, почему сентябрь-ноябрь лучше весны, и показываем правильный алгоритм.', content: 'В Краснодаре земля зимой почти не промерзает, поэтому осенняя посадка (сентябрь–ноябрь) максимально эффективна: корни успевают укорениться до жары и весной растение стартует опережающими темпами. Ранневесенняя посадка (март–апрель) — второй лучший срок. Летом сажаем только контейнированные растения и с усиленным поливом.', image: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800&h=500&fit=crop', date: '2026-02-09', category: 'Агрономия', order: 2 },
+  { id: 'blog-3', slug: 'kak-vybrat-sazhency', title: 'Как выбрать саженцы деревьев и кустарников, чтобы они точно прижились в южном климате', excerpt: 'На что смотреть при покупке: корневая система, состояние коры, происхождение и адаптация сорта к жаре.', content: 'Главный признак здорового саженца — упругая корневая кома без запаха гнили, живой прирост текущего года и целая кора без механических повреждений. Покупайте растения, выращенные локально: привезённые из северных питомников часто страдают первой же южной зимой без акклиматизации.', image: 'https://images.unsplash.com/photo-1523712999610-f77fbcfc14da?w=800&h=500&fit=crop', date: '2026-02-08', category: 'Советы', order: 3 },
+  { id: 'blog-4', slug: 'top-10-rastenij-dlya-zhar', title: 'ТОП-10 растений, которые идеально переносят жару и солнце в Краснодаре', excerpt: 'Можжевельник Скайрокет, туя Смарагд, фотиния, лавровишня, кизильник, лаванда… Список выносливых для зноя +40.', content: 'Для южного солнца и засухи подходят: можжевельники (Скайрокет, Голдстар, Тамарисцифолия), туи Смарагд и Брабант, бересклет японский, лавровишня, кизильник, а из многолетников — лаванда, гвоздика, очиток и гейхеры. Эти растения не выгорают и устойчивы к засухе.', image: 'https://images.unsplash.com/photo-1508138262774-9a2904186213?w=800&h=500&fit=crop', date: '2026-02-06', category: 'Подборки', order: 4 },
+];
+
+// ==================== FAQ ====================
 export const defaultFAQ: FAQItem[] = [
-  { id: 'faq-1', question: 'Нужно ли покупать оборудование?', answer: 'Нет. Мы производим товары на собственном оборудовании. Вы получаете готовые изделия для продажи — не нужно покупать 3D-принтеры, лазерные станки или другое оборудование.', order: 1 },
-  { id: 'faq-2', question: 'Как получить фотографии товаров?', answer: 'Для каждого товара из каталога мы предоставляем набор фотографий, описаний и характеристик, которые можно использовать для создания карточек на маркетплейсах. Материалы доступны после регистрации.', order: 2 },
-  { id: 'faq-3', question: 'Можно ли продавать на нескольких площадках?', answer: 'Да, вы можете продавать наши товары на Wildberries, Ozon, Яндекс Маркете, Авито и любых других площадках одновременно.', order: 3 },
-  { id: 'faq-4', question: 'Есть ли минимальная партия?', answer: 'Минимальная партия зависит от товара и обычно составляет от 10 до 30 штук. Точные условия указаны в карточке каждого товара.', order: 4 },
-  { id: 'faq-5', question: 'Можно ли заказать производство собственного изделия?', answer: 'Да. Мы принимаем заказы на изготовление по вашим 3D-моделям, чертежам или техническому заданию. Свяжитесь с нами для обсуждения.', order: 5 },
-  { id: 'faq-6', question: 'Как рассчитывается стоимость фулфилмента?', answer: 'Стоимость зависит от объёма, веса, габаритов и набора услуг. Базовая стоимость — от 35 ₽ за отправку. Точный расчёт предоставим по запросу.', order: 6 },
-  { id: 'faq-7', question: 'Кто отвечает за создание карточек?', answer: 'Вы можете создать карточки самостоятельно, используя наши материалы. Либо заказать услугу «Создание карточек» — мы подготовим профессиональные фото и описания.', order: 7 },
-  { id: 'faq-8', question: 'Можно ли работать только с производством?', answer: 'Да. Если у вас уже есть налаженные продажи, вы можете заказывать у нас только производство товаров. Мы не навязываем дополнительные услуги.', order: 8 },
-  { id: 'faq-9', question: 'Как рассчитать потенциальную прибыль?', answer: 'Используйте наш калькулятор экономики — введите закупочную цену, цену продажи, комиссию площадки и другие расходы. Калькулятор покажет предварительную маржинальность.', order: 9 },
+  { id: 'faq-1', question: 'Когда лучше всего сажать растения в Краснодаре?', answer: 'Оптимальное время посадки — осень (сентябрь–ноябрь) и ранняя весна (март–апрель). Осенняя посадка особенно эффективна: земля ещё тёплая, солнце мягкое, корни успевают прижиться до жары.', order: 1 },
+  { id: 'faq-2', question: 'Какие растения лучше всего переносят жару и солнце на юге?', answer: 'Для южного климата подходят: можжевельники (Скайрокет, Голдстар, Тамарисцифолия), туи Смарагд и Брабант, бересклет японский, лавровишня, кизильник, а также многие многолетники — лаванда, гвоздика, очиток, гейхеры. Эти растения не выгорают и устойчивы к засухе.', order: 2 },
+  { id: 'faq-3', question: 'Почему растения не приживаются после посадки?', answer: 'Самые частые причины: слишком глубокая или мелкая посадка, отсутствие полива в первые недели, уплотнение грунта вокруг корней и посадка неадаптированных растений в жару. Наши агрономы бесплатно подскажут, как избежать ошибок, а услуга посадки «под ключ» гарантирует результат.', order: 3 },
+  { id: 'faq-4', question: 'Даёте ли вы гарантию на растения?', answer: 'Да. Весь посадочный материал выращен или акклиматизирован в нашем питомнике, приживаемость составляет 99,9%. При соблюдении рекомендаций по уходу мы заменяем растение, если оно не прижилось.', order: 4 },
+  { id: 'faq-5', question: 'Можно ли купить редкие сорта?', answer: 'Да, в центре «Крокус» есть коллекционные сорта хвойных и декоративных растений, которые редко встречаются в рознице. Мы также можем привезти любое растение под заказ из европейских питомников на 20-30% выгоднее рынка.', order: 5 },
+  { id: 'faq-6', question: 'Есть ли доставка по Краснодару и краю?', answer: 'Да, доставка осуществляется собственным транспортом. По городу — от 1 500 ₽, по краю — по тарифу. При покупке от 30 000 ₽ доставка по Краснодару бесплатная. Крупномеры доставляем с техникой.', order: 6 },
+  { id: 'faq-7', question: 'Делаете ли вы полный цикл — от проекта до автополива?', answer: 'Да. «Крокус» — это единая команда: ландшафтный дизайн, поставка растений из питомника, посадка, рулонный газон, монтаж автополива и дальнейшее обслуживание сада. Один договор — один ответственный исполнитель.', order: 7 },
+  { id: 'faq-8', question: 'Как оплатить и есть ли рассрочка?', answer: 'Оплата наличными, переводом или по реквизитам для юридических лиц. Для партнёров-ландшафтников действуют накопительная скидка и отсрочка платежа. Рассрочку на крупные проекты обсуждаем индивидуально.', order: 8 },
+  { id: 'faq-9', question: 'Можно ли приехать и посмотреть растения вживую?', answer: 'Конечно! Садовый центр работает ежедневно с 09:00 до 18:00 по адресу: г. Краснодар, Ростовское ш., 30/1. Территория открыта для прогулок — растения можно осмотреть перед покупкой, а агроном поможет с выбором.', order: 9 },
 ];
 
-export const defaultBlocks: ContentBlock[] = [
-  { id: 'blk-1', type: 'hero', title: 'Запустите продажи на маркетплейсах без собственного производства', subtitle: 'Готовые товары, материалы для карточек, производство под заказ и фулфилмент. Вы развиваете продажи — мы помогаем с изготовлением и логистикой.', buttonText: 'Выбрать товары', buttonLink: '/catalog', order: 1, visible: true, data: { buttonText2: 'Условия сотрудничества', buttonLink2: '/pricing' } },
-  { id: 'blk-2', type: 'steps', title: 'Как это работает', subtitle: 'Четыре простых шага до первых продаж', order: 2, visible: true, data: { steps: [
-    { title: 'Выберите товары', text: 'Изучите каталог и выберите позиции для продажи' },
-    { title: 'Получите материалы', text: 'Фотографии, описания и характеристики для карточек' },
-    { title: 'Создайте карточки', text: 'Разместите товары на выбранных маркетплейсах' },
-    { title: 'Закажите производство', text: 'Мы изготовим и доставим товары по согласованным условиям' },
-  ] } },
-  { id: 'blk-3', type: 'advantages', title: 'Почему это удобно', subtitle: 'Преимущества работы с нами', order: 3, visible: true, data: { items: [
-    { title: 'Без оборудования', text: 'Не нужно покупать 3D-принтер или лазерный станок' },
-    { title: 'Без организации производства', text: 'Мы берём изготовление на себя' },
-    { title: 'Готовый каталог', text: 'Выбирайте из проверенных товаров' },
-    { title: 'Тестирование спроса', text: 'Небольшие партии для проверки гипотез' },
-    { title: 'Материалы для карточек', text: 'Фото и описания для маркетплейсов' },
-    { title: 'Фулфилмент', text: 'Хранение, упаковка и отгрузка' },
-  ] } },
-  { id: 'blk-4', type: 'featured-products', title: 'Популярные товары', subtitle: 'Товары, которые хорошо продаются на маркетплейсах', order: 4, visible: true },
-  { id: 'blk-5', type: 'calculator', title: 'Калькулятор экономики', subtitle: 'Оцените потенциальную прибыль до начала продаж', order: 5, visible: true },
-  { id: 'blk-6', type: 'tariffs', title: 'Тарифы сотрудничества', subtitle: 'Выберите подходящий формат работы', order: 6, visible: true },
-  { id: 'blk-7', type: 'faq', title: 'Частые вопросы', subtitle: 'Ответы на популярные вопросы о сотрудничестве', order: 7, visible: true },
-  { id: 'blk-8', type: 'form', title: 'Получите каталог товаров и условия сотрудничества', subtitle: 'Оставьте заявку — мы свяжемся с вами в течение рабочего дня', order: 8, visible: true },
-];
-
+// ==================== НАСТРОЙКИ ====================
 export const defaultSettings: SiteSettings = {
-  siteName: 'Производство для продавцов',
-  phone: '+7 (900) 123-45-67',
-  email: 'partner@example.com',
-  telegram: '@production_partner',
-  whatsapp: '+79001234567',
-  address: 'Россия, г. Москва',
-  headerText: 'Производство и фулфилмент для продавцов маркетплейсов',
-  footerText: '© 2024 Производство для продавцов маркетплейсов. Все права защищены.',
+  siteName: 'Садовый центр «Крокус»',
+  phone: '+7 (961) 504-40-88',
+  email: 'info@crocus-krd.ru',
+  telegram: '@crocus_sad',
+  whatsapp: '+79615044088',
+  workHours: 'Ежедневно с 09:00 до 18:00',
+  address: 'г. Краснодар, Ростовское ш., 30/1',
+  mapsUrl: 'https://yandex.ru/maps/org/krokus/75778321793/',
+  headerText: 'Питомник растений в Краснодаре. Около 2000 видов деревьев, кустарников и цветов в наличии.',
+  footerText: '© 2026 Садовый центр «Крокус», Краснодар. Все права защищены.',
 };
 
+// ==================== БЛОКИ ГЛАВНОЙ ====================
+export const defaultBlocks: ContentBlock[] = [
+  { id: 'blk-1', type: 'hero', title: 'Саженцы растений в Краснодаре', subtitle: 'Садовый центр «Крокус». В наличии около 2000 видов деревьев, кустарников и цветов. Выращиваем в собственных теплицах и адаптируем под южный климат.', buttonText: 'Открыть каталог', buttonLink: '/catalog', order: 1, visible: true, data: { buttonText2: 'Задать вопрос', buttonLink2: '/contacts' } },
+  { id: 'blk-2', type: 'categories', title: 'Каталог растений', subtitle: 'Хвойные и лиственные культуры, плодовые, рассада и всё для ухода за садом', order: 2, visible: true },
+  { id: 'blk-3', type: 'steps', title: 'Как рождается ваш сад', subtitle: 'Пять шагов от идеи до зелёного участка «под ключ»', order: 3, visible: true, data: { steps: [
+    { title: 'Заявка и консультация', text: 'Расскажите об участке — агроном предложит варианты под солнце, ветер и бюджет' },
+    { title: 'Проект и подбор растений', text: 'Дендроплан, визуализация и ассортиментная ведомость с ценами' },
+    { title: 'Посадка', text: 'Бригада привозит и высаживает растения с подготовкой грунта и мульчей' },
+    { title: 'Газон и автополив', text: 'Укладываем рулонный газон и монтируем систему полива за один день' },
+    { title: 'Сопровождение', text: 'Стрижка, подкормки и защита растений — ваш сад всегда в форме' },
+  ] } },
+  { id: 'blk-4', type: 'advantages', title: 'Мы не просто продаём растения — мы создаём сады', subtitle: 'Название «Крокус» символизирует пробуждение природы и новую жизнь — именно это мы дарим каждому участку.', order: 4, visible: true, data: { items: [
+    { title: 'Импорт любых растений в Краснодар', text: 'За счёт прямых импортных поставок привезём любое растение на 20-30% выгоднее рынка' },
+    { title: 'Приживаемость наших растений 99,9%', text: 'Всё выращено и адаптировано под климат Краснодара и Краснодарского края' },
+    { title: '«Под ключ» — от посадки до автополива', text: 'Доставка, посадка, автополив и обслуживание одной командой' },
+    { title: 'Редкие коллекционные сорта и топиари', text: 'В нашем садовом центре есть то, чего нет у других. Уникальность — наша специализация' },
+  ] } },
+  { id: 'blk-5', type: 'featured-products', title: 'Популярные товары', subtitle: 'Хиты сезона из питомника: топиари, крупномеры и вечнозелёные культуры', order: 5, visible: true },
+  { id: 'blk-6', type: 'services', title: 'Услуги садового центра', subtitle: 'Полный цикл благоустройства — проектирование, поставка, посадка и обслуживание', order: 6, visible: true },
+  { id: 'blk-7', type: 'reviews', title: 'Отзывы наших клиентов', subtitle: 'Средняя оценка 5.0 на Яндекс Картах', order: 7, visible: true },
+  { id: 'blk-8', type: 'faq', title: 'Частые вопросы', subtitle: 'Ответы агрономов о посадке, уходе и покупке растений на юге', order: 8, visible: true },
+  { id: 'blk-9', type: 'form', title: 'Получите консультацию агронома', subtitle: 'Оставьте заявку — перезвоним, поможем подобрать растения и рассчитаем стоимость', order: 9, visible: true },
+];
+
+// ==================== ЗНАЧЕНИЯ КАЛЬКУЛЯТОРА (совместимость со старой админкой) ====================
 export const defaultCalculatorDefaults: CalculatorDefaults = {
   commissionPercent: 15,
   logisticsCost: 80,
@@ -190,17 +279,17 @@ export const defaultCalculatorDefaults: CalculatorDefaults = {
   taxPercent: 6,
 };
 
+// ==================== ЛИДЫ (демо) ====================
 export const defaultLeads: Lead[] = [
   {
-    id: 'lead-1', createdAt: '2024-03-01T10:30:00', name: 'Алексей Петров', phone: '+7 (911) 222-33-44', email: 'alexey@mail.ru',
-    status: 'new', sellerType: 'beginner', interestedServices: ['catalog', 'fulfillment'], preferredContact: 'telegram',
-    comment: 'Хочу начать продавать на Wildberries. Интересуют органайзеры и держатели.',
-    utmSource: 'telegram', utmCampaign: 'spring_sale', notes: [],
+    id: 'lead-1', createdAt: '2026-03-01T10:30:00', name: 'Алексей Петров', phone: '+7 (911) 222-33-44', email: 'alexey@mail.ru',
+    status: 'new', sellerType: 'beginner', interestedServices: ['Товары из каталога'], preferredContact: 'telegram',
+    comment: 'Хочу обновить живую изгородь на даче. Интересуют кипарис и лавровишня.', notes: [],
   },
   {
-    id: 'lead-2', createdAt: '2024-03-02T14:15:00', name: 'Мария Иванова', phone: '+7 (922) 333-44-55', email: 'maria@shop.ru',
-    status: 'contact', sellerType: 'existing', interestedServices: ['custom', 'fulfillment'], preferredContact: 'phone',
-    comment: 'Уже продаю на Ozon. Нужны новые позиции и фулфилмент.',
-    notes: [{ id: 'n-1', text: 'Перезвонить во вторник', createdAt: '2024-03-02T16:00:00', author: 'admin' }],
+    id: 'lead-2', createdAt: '2026-03-02T14:15:00', name: 'Мария Иванова', phone: '+7 (922) 333-44-55', email: 'maria@design.ru',
+    status: 'contact', sellerType: 'brand', interestedServices: ['Ландшафтный дизайн', 'Автополив'], preferredContact: 'phone',
+    comment: 'Проектирую участок 15 соток в Динской. Нужен дендроплан и поставка растений.',
+    notes: [{ id: 'n-1', text: 'Перезвонить во вторник', createdAt: '2026-03-02T16:00:00', author: 'admin' }],
   },
 ];

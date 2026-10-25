@@ -1,28 +1,53 @@
 @import "tailwindcss";
 
-@layer base {
-  html {
-    scroll-behavior: smooth;
-  }
-  
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
+@theme {
+  --color-forest-50: #f2f7f1;
+  --color-forest-100: #dfece0;
+  --color-forest-200: #c0d9c3;
+  --color-forest-300: #94bd9a;
+  --color-forest-400: #649c6f;
+  --color-forest-500: #437e51;
+  --color-forest-600: #326440;
+  --color-forest-700: #295035;
+  --color-forest-800: #22412d;
+  --color-forest-900: #1c3525;
+  --color-forest-950: #0e1e16;
+  --color-crocus-300: #d3a9e7;
+  --color-crocus-400: #b97ad3;
+  --color-crocus-500: #9e52bd;
+  --color-crocus-600: #843ca0;
+  --color-gold-400: #e4b13f;
+  --color-gold-500: #d49a26;
+  --color-cream: #faf7f0;
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-body: "Manrope", ui-sans-serif, system-ui, sans-serif;
 }
 
-@layer utilities {
-  .line-clamp-1 {
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  .line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--color-cream);
+  color: #1f2a22;
+  -webkit-font-smoothing: antialiased;
 }
+
+.font-display { font-family: var(--font-display); }
+
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity .7s ease, transform .7s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+@keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+.animate-floaty { animation: floaty 5s ease-in-out infinite; }
+
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(50,100,64,.4); }
+  70% { box-shadow: 0 0 0 12px rgba(50,100,64,0); }
+  100% { box-shadow: 0 0 0 0 rgba(50,100,64,0); }
+}
+.pulse-ring { animation: pulse-ring 2.4s infinite; }
+
+.line-clamp-2 { display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.line-clamp-3 { display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+
+::selection { background:#94bd9a; color:#0e1e16; }
